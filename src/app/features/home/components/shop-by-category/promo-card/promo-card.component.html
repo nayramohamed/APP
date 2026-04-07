@@ -1,0 +1,35 @@
+<div [class]="promoCard().containerClass + ' relative overflow-hidden rounded-2xl p-7 md:p-8'">
+  <div class="absolute -left-6 -bottom-6 size-20 rounded-full bg-white/10"></div>
+  <div class="absolute -right-8 -top-8 size-24 rounded-full bg-white/12"></div>
+
+  <div class="relative z-10">
+    <span
+      class="inline-flex items-center gap-2 text-sm font-semibold px-3 py-1 rounded-full bg-white/20 text-white mb-4"
+    >
+      <span>{{ promoCard().icon }}</span>
+      {{ promoCard().badgeKey | translate }}
+    </span>
+
+    <h3 class="text-2xl font-bold leading-tight">{{ promoCard().titleKey | translate }}</h3>
+    <p class="text-white/90 mt-3 text-xl">{{ promoCard().descriptionKey | translate }}</p>
+
+    <div class="mt-5 flex items-end gap-3 flex-wrap">
+      <span class="text-3xl font-bold tracking-tight">{{ promoCard().discount }}</span>
+      <span class="text-sm text-white/70 pb-1">
+        {{ 'home.shopbycategory.promos.useCode' | translate }}:
+        <span class="font-bold text-white">{{ promoCard().code }}</span>
+      </span>
+    </div>
+
+    <button
+      type="button"
+      [class]="
+        promoCard().buttonClass +
+        ' mt-7 px-6 py-3 rounded-full font-bold inline-flex items-center gap-2 transition-colors'
+      "
+    >
+      {{ promoCard().buttonKey | translate }}
+      <i class="fas fa-arrow-right text-sm"></i>
+    </button>
+  </div>
+</div>

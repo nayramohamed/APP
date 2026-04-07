@@ -1,0 +1,42 @@
+<div class="flex items-center justify-between mb-4">
+  <div class="flex items-center gap-2">
+    <button
+      (click)="toggleMobileFilters.set(true)"
+      class="lg:hidden flex items-center gap-2 px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors cursor-pointer"
+    >
+      <i class="fas fa-sliders"></i> {{ 'search.filters' | translate }}
+    </button>
+    <div class="flex items-center gap-1 bg-white rounded-lg border border-gray-200 p-1">
+      <button
+        (click)="toggleView(false)"
+        [class]="isListView() ? 'text-gray-500 hover:text-gray-700' : 'bg-primary-600 text-white'"
+        class="size-8 justify-center items-center flex p-2 rounded-md transition-colors cursor-pointer"
+      >
+        <i class="fas fa-grip-vertical text-sm"></i>
+      </button>
+      <button
+        (click)="toggleView(true)"
+        [class]="isListView() ? 'bg-primary-600 text-white' : 'text-gray-500 hover:text-gray-700'"
+        class="size-8 justify-center items-center flex p-2 rounded-md transition-colors cursor-pointer"
+      >
+        <i class="fas fa-list text-sm"></i>
+      </button>
+    </div>
+  </div>
+
+  <form class="flex items-center gap-2 text-sm text-gray-500">
+    <span>{{ 'search.sortBy' | translate }}</span>
+    <select
+      [value]="sortOption()"
+      (input)="sortOption.set($any($event.target).value)"
+      class="border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-1 focus:ring-green-400 bg-white"
+    >
+      <option value="" selected="">{{ 'search.relevance' | translate }}</option>
+      <option value="price">{{ 'search.priceLowToHigh' | translate }}</option>
+      <option value="-price">{{ 'search.priceHighToLow' | translate }}</option>
+      <option value="-ratingsAverage">{{ 'search.ratingHighToLow' | translate }}</option>
+      <option value="title">{{ 'search.nameAtoZ' | translate }}</option>
+      <option value="-title">{{ 'search.nameZtoA' | translate }}</option>
+    </select>
+  </form>
+</div>

@@ -1,0 +1,64 @@
+<app-breadcrumb-header
+  [title]="'profile.myAccount' | translate"
+  [subtitle]="'profile.subtitle' | translate"
+  [parentRoutes]="['home', 'profile']"
+  [parentLabels]="['breadcrumb.home' | translate, 'profile.myAccount' | translate]"
+  iconClass="fa-user"
+  classes="bg-linear-to-br from-primary-600 via-primary-500 to-primary-400"
+></app-breadcrumb-header>
+
+<section class="bg-gray-50 py-8 px-4 min-h-screen">
+  <div class="container mx-auto">
+    <div class="grid lg:grid-cols-8 gap-6 lg:gap-8">
+      <div
+        class="bg-white rounded-2xl border border-slate-200 b-white overflow-hidden lg:col-span-2 h-fit"
+      >
+        <div class="p-4 border-b border-gray-100">
+          <h2 class="text-gray-900 font-bold">{{ 'profile.myAccount' | translate }}</h2>
+        </div>
+        <div class="p-2">
+          <a
+            class="flex items-center justify-between transition-all hover:bg-gray-50 hover:text-gray-900 py-3 px-4 group rounded-2xl cursor-pointer"
+            routerLink="addresses"
+            routerLinkActive="active bg-primary-50 text-primary-700"
+          >
+            <div class="flex items-center gap-2">
+              <div
+                class="rounded-xl flex items-center justify-center transition-colors bg-gray-100 text-gray-500 group-hover:bg-gray-200 group-[.active]:bg-primary-500 group-[.active]:text-white size-9"
+              >
+                <i class="fas fa-location-dot text-sm"></i>
+              </div>
+              <p>{{ 'profile.myAddresses' | translate }}</p>
+            </div>
+            <i
+              class="fas fa-chevron-right text-gray-400 group-[.active]:text-primary-500 text-xs"
+            ></i>
+          </a>
+
+          <a
+            class="flex items-center justify-between transition-all hover:bg-gray-50 hover:text-gray-900 py-3 px-4 group rounded-2xl cursor-pointer"
+            routerLink="settings"
+            routerLinkActive="active bg-primary-50 text-primary-700"
+          >
+            <div class="flex items-center gap-2">
+              <div
+                class="rounded-xl flex items-center justify-center transition-colors bg-gray-100 text-gray-500 group-hover:bg-gray-200 group-[.active]:bg-primary-500 group-[.active]:text-white size-9"
+              >
+                <i class="fas fa-gear text-sm"></i>
+              </div>
+              <p>{{ 'profile.settings.title' | translate }}</p>
+            </div>
+            <i
+              class="fas fa-chevron-right text-gray-400 group-[.active]:text-primary-500 text-xs"
+            ></i>
+          </a>
+        </div>
+      </div>
+      <div class="lg:col-span-6">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-features-section></app-features-section>

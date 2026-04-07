@@ -1,0 +1,88 @@
+@if (!isFiltersEmpty()) {
+  <div class="filter mb-6 flex items-center gap-3">
+    <div class="text-gray-600 flex items-center gap-2 *:text-sm">
+      <i class="fas fa-filter"></i>
+      <p>Active Filters:</p>
+    </div>
+    <div class="flex items-center gap-3">
+      @if (activeFilters()['q']) {
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-xs hover:bg-gray-200"
+        >
+          <span>"{{ activeFilters()['q'] }}"</span>
+          <button class="cursor-pointer" (click)="removeQueryFilter()">
+            <i class="fas fa-x text-[11px]"></i>
+          </button>
+        </div>
+      }
+      @if (activeFilters()['price']) {
+        @let currentMinPrice = activeFilters()['price']?.minPrice ?? 0;
+        @let currentMaxPrice = activeFilters()['price']?.maxPrice ?? 0;
+        <div
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-100 text-amber-700 text-xs hover:bg-amber-200"
+        >
+          <span
+            >{{ currentMinPrice >= 0 ? currentMinPrice : '0' }} -
+            {{ currentMaxPrice > 0 ? currentMaxPrice : '∞' }} EGP</span
+          >
+          <button (click)="removePriceFilter()" class="cursor-pointer">
+            <i class="fas fa-x text-[11px]"></i>
+          </button>
+        </div>
+      }
+      @if (activeFilters()['category']) {
+        @for (categoryFilter of activeFilters()['category']; track $index) {
+          <div
+            class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-100 text-primary-700 text-sm font-medium hover:bg-primary-200 transition-colors"
+          >
+            <i class="fa fa-layer-group text-[11px]"></i>
+            <span>{{ categoryFilter.name }}</span>
+            <button
+              class="cursor-pointer"
+              (click)="removeArrayFilterById('category', categoryFilter._id)"
+            >
+              <i class="fas fa-x text-[11px]"></i>
+            </button>
+          </div>
+        }
+      }
+
+      @if (activeFilters()['subcategory']) {
+        @for (subcategoryFilter of activeFilters()['subcategory']; track $index) {
+          <div
+            class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-100 text-primary-700 text-sm font-medium hover:bg-primary-200 transition-colors"
+          >
+            <i class="fa fa-folder-open text-[11px]"></i>
+            <span>{{ subcategoryFilter?.name }}</span>
+            <button
+              class="cursor-pointer"
+              (click)="removeArrayFilterById('subcategory', subcategoryFilter._id)"
+            >
+              <i class="fas fa-x text-[11px]"></i>
+            </button>
+          </div>
+        }
+      }
+      @if (activeFilters()['brand']) {
+        @for (brandFilter of activeFilters()['brand']; track $index) {
+          <div
+            class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-violet-100 text-violet-700 text-sm font-medium hover:bg-violet-200 transition-colors"
+          >
+            <i class="fa fa-tags text-[11px]"></i>
+            <span>{{ brandFilter?.name }}</span>
+            <button
+              class="cursor-pointer"
+              (click)="removeArrayFilterById('brand', brandFilter._id)"
+            >
+              <i class="fas fa-x text-[11px]"></i>
+            </button>
+          </div>
+        }
+      }
+    </div>
+
+    <a (click)="clearAll()" class="text-sm text-gray-500 hover:text-gray-700 underline"
+      >Clear all</a
+    >
+  </div>
+}

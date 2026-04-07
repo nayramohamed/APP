@@ -1,0 +1,36 @@
+<div class="flex items-center justify-center bg-slate-50 mt-5">
+  <nav aria-label="Pagination" class="flex items-center gap-2 select-none">
+    <button
+      [disabled]="!isPrev()"
+      (click)="prevPage()"
+      class="w-10 h-10 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+      aria-label="Previous page"
+    >
+      <i class="fas fa-chevron-left text-xs rtl:rotate-180"></i>
+    </button>
+
+    @for (pageButton of pages(); track $index) {
+      <button
+        (click)="toPage(pageButton)"
+        [class]="
+          activePage() === pageButton
+            ? ' text-white ' + activeButtonClasses()
+            : 'border border-gray-200 text-gray-600 hover:bg-gray-50'
+        "
+        class="w-10 h-10 rounded-lg flex items-center justify-center font-medium transition-colors cursor-pointer"
+        aria-current="page"
+      >
+        {{ pageButton }}
+      </button>
+    }
+
+    <button
+      [disabled]="!isNext()"
+      (click)="nextPage()"
+      class="w-10 h-10 rounded-lg border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+      aria-label="Next page"
+    >
+      <i class="fas fa-chevron-right text-xs rtl:rotate-180"></i>
+    </button>
+  </nav>
+</div>

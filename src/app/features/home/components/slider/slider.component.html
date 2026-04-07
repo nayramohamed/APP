@@ -1,0 +1,74 @@
+<section class="h-100 relative w-full overflow-hidden">
+  <button
+    (click)="prevSlide()"
+    aria-label="Previous slide"
+    class="hidden md:flex absolute left-5 top-1/2 -translate-y-1/2 z-10 items-center justify-center rounded-full size-12 bg-white/90 text-green-500 transition-all duration-300 hover:scale-110 hover:text-green-600 min-w-12"
+  >
+    <app-left-arrow-icon></app-left-arrow-icon>
+  </button>
+
+  <button
+    (click)="nextSlide()"
+    aria-label="Next slide"
+    class="hidden md:flex absolute right-5 top-1/2 -translate-y-1/2 z-10 items-center justify-center rounded-full size-12 bg-white/90 text-green-500 transition-all duration-300 hover:scale-110 hover:text-green-600 min-w-12"
+  >
+    <app-right-arrow-icon></app-right-arrow-icon>
+  </button>
+
+  @if (slides.length) {
+    <swiper-container
+      #swiperContainer
+      slides-per-view="1"
+      pagination="false"
+      navigation="false"
+      loop="true"
+    >
+      @for (slide of slides; track $index) {
+        <swiper-slide>
+          <div
+            class="min-w-full h-100 flex items-center bg-cover bg-center px-8"
+            [style.backgroundImage]="
+              'linear-gradient(to right, rgba(34,197,94,.90), rgba(74,222,128,.55)), url(' +
+              slide.imageUrl +
+              ')'
+            "
+          >
+            <div class="container mx-auto">
+              <div
+                [class]="!loaded() || currentIndex() === 0 ? 'animate-fade-in-up' : ''"
+                class="flex flex-col justify-center gap-5 w-full container"
+              >
+                <h2 class="text-white text-3xl max-w-90 font-bold">
+                  {{ slide.title | translate }}
+                </h2>
+                <span class="text-white font-medium">{{ slide.description | translate }}</span>
+                <div class="flex items-center gap-2 w-full flex-wrap">
+                  <button
+                    [routerLink]="slide.firstButtonText.action"
+                    class="bg-white text-[#00C950] px-6 py-2 rounded-md hover:bg-white/90 transition font-semibold border-2 border-white cursor-pointer hover:scale-105"
+                  >
+                    {{ slide.firstButtonText.text | translate }}
+                  </button>
+                  <button
+                    class="bg-transparent border-2 border-white/50 text-white px-6 py-2 rounded-md hover:bg-white hover:text-[#00C950] transition font-semibold cursor-pointer hover:scale-105"
+                  >
+                    {{ slide.secondButtonText.text | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </swiper-slide>
+      }
+    </swiper-container>
+  }
+  <div class="absolute left-0 right-0 bottom-5 z-30 flex items-center justify-center gap-2">
+    @for (indicator of slides; track $index) {
+      <button
+        (click)="goToSlide($index)"
+        class="rounded-full h-3 transition-all duration-300 cursor-pointer"
+        [class]="$index === currentIndex() ? ' bg-white w-8 ' : 'bg-white/50 w-3'"
+      ></button>
+    }
+  </div>
+</section>

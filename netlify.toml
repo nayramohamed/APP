@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = "dist/e-commerce/browser"
+
+[[plugins]]
+  package = "@netlify/angular-runtime"
+
+
+[[redirects]]
+  from = "/"
+  to = "/home"
+  status = 302

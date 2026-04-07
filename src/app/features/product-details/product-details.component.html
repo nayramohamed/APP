@@ -1,0 +1,18 @@
+@if (reviews() && product(); as validProduct) {
+  <app-current-product
+    [reviewsCount]="reviewsCount()"
+    [product]="validProduct"
+    [isLoading]="isLoadingCurrentProduct()"
+  ></app-current-product>
+  <app-details-review
+    [(reviews)]="reviews"
+    [(reviewsCount)]="reviewsCount"
+    [product]="validProduct"
+  ></app-details-review>
+
+  <app-similar-category-products-slider
+    [product]="validProduct"
+  ></app-similar-category-products-slider>
+
+  <app-features-section></app-features-section>
+}

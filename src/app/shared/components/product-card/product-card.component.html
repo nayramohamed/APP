@@ -1,0 +1,106 @@
+@if (product()) {
+  <div
+    class="block rounded-lg border border-gray-200 overflow-hidden bg-white hover:-translate-y-1.25 transition-all hover:shadow-sm duration-300 h-full"
+  >
+    <div class="relative rounded-sm p-1">
+      <img
+        [src]="product()?.imageCover"
+        [alt]="product()?.title"
+        class="mx-auto h-60 w-full object-contain"
+      />
+
+      @if (product()?.priceAfterDiscount! > 0) {
+        <div class="absolute top-3 left-3 bg-red-500">
+          <span class="text-white text-xs px-2 py-1 rounded">-{{ discountPercentage() }}%</span>
+        </div>
+      }
+
+      <div class="absolute right-1.5 top-1.5 flex flex-col gap-2 *:cursor-pointer">
+        <button
+          (click)="addToWishlist()"
+          title="Add to wishlist"
+          type="button"
+          class="size-8 rounded-full border flex items-center justify-center border-gray-200 bg-white shadow-sm text-gray-500 transition hover:text-rose-600"
+        >
+          @if (isAddingToWishlist()) {
+            <i class="fas fa-spinner fa-spin text-rose-500"></i>
+          } @else if (isAddedToWishlist()) {
+            <i class="fas fa-heart text-rose-500"></i>
+          } @else {
+            <app-icon name="heart" class="w-4 h-3.5"></app-icon>
+          }
+        </button>
+        <button
+          type="button"
+          class="size-8 rounded-full border flex items-center justify-center border-gray-200 bg-white shadow-sm text-gray-500 transition hover:text-primary-600"
+        >
+          <app-icon name="arrows-rotate" class="size-4"></app-icon>
+        </button>
+        <button
+          [routerLink]="['/products/' + product()?.id]"
+          title="View product details"
+          type="button"
+          class="size-8 rounded-full border flex items-center justify-center border-gray-200 bg-white shadow-sm text-gray-500 transition hover:text-primary-600"
+        >
+          <app-icon name="eye" class="w-4.5 h-[3.5]"></app-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="p-4">
+      <p class="text-xs text-gray-500">{{ product()?.category?.name }}</p>
+      <h3 class="mt-0.5 font-medium leading-6 text-gray-800 line-clamp-2">
+        <a [routerLink]="['/products/' + product()?.id]">{{ product()?.title }}</a>
+      </h3>
+
+      <div class="mt-2 flex items-center gap-1">
+        @for (star of [1, 2, 3, 4, 5]; track $index) {
+          @switch (getStarType(star)) {
+            @case ('full') {
+              <i class="fas fa-star text-amber-400"></i>
+            }
+            @case ('half') {
+              <i class="fas fa-star-half-stroke text-amber-400"></i>
+            }
+            @case ('empty') {
+              <i class="far fa-star text-amber-400"></i>
+            }
+          }
+        }
+        <div class="*:text-gray-500 *:text-xs">
+          <span class="ml-1 mr-0.5 xs font-medium">{{ product()?.ratingsAverage }}</span>
+          <span>({{ product()?.ratingsQuantity }})</span>
+        </div>
+      </div>
+
+      <div class="mt-2 flex items-start justify-between">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-lg font-bold text-primary-600"
+            >{{
+              product()?.priceAfterDiscount ? product()?.priceAfterDiscount : product()?.price
+            }}
+            EGP</span
+          >
+          @if (product()?.priceAfterDiscount) {
+            <span class="line-through text-sm text-gray-500">{{ product()?.price }} EGP</span>
+          }
+        </div>
+
+        <button
+          [disabled]="isAddedToCart() || isAddingToCart()"
+          (click)="addToCart()"
+          type="button"
+          class="flex h-11 w-11 items-center justify-center rounded-full bg-green-600 text-white transition hover:bg-green-700 cursor-pointer"
+        >
+          @if (isAddingToCart()) {
+            <i class="fas fa-spinner animate-spin text-sm"></i>
+          } @else if (isAddedToCart()) {
+            <i class="fas fa-check text-sm"></i>
+          } @else {
+            <i class="fas fa-plus text-sm"></i>
+          }
+        </button>
+      </div>
+    </div>
+  </div>
+}

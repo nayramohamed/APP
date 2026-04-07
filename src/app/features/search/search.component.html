@@ -1,0 +1,48 @@
+<app-search-header
+  [(activeFilters)]="filters"
+  [productsQuantity]="products().length"
+  [(searchQuery)]="searchQuery"
+></app-search-header>
+
+<section class="min-h-screen bg-gray-50/50">
+  <div class="container mx-auto px-6 py-6 flex gap-6">
+    <app-filter-sidebar
+      [(filters)]="filters"
+      [categories]="categories()"
+      [brands]="brands()"
+      (clearfilters)="clearAllFilters()"
+      [(toggleMobileFilters)]="toggleMobileFilters"
+    ></app-filter-sidebar>
+
+    <div class="flex-1 min-w-0">
+      <app-filter-toolbar
+        [(isListView)]="isListView"
+        [(toggleMobileFilters)]="toggleMobileFilters"
+      ></app-filter-toolbar>
+
+      <app-active-filters
+        (clearFilters)="clearAllFilters()"
+        [(activeFilters)]="filters"
+        [(searchQuery)]="searchQuery"
+      ></app-active-filters>
+      @if (isSearchingProducts()) {
+        <app-items-loader
+          loadingMessage="Searching products..."
+          class="text-primary-500"
+        ></app-items-loader>
+      } @else if (products().length > 0) {
+        <app-filter-products-grid
+          [products]="products()"
+          [isListView]="isListView()"
+        ></app-filter-products-grid>
+
+        @if (pagesCount() > 1) {
+          <app-pagination [paginationData]="paginationData()"></app-pagination>
+        }
+      } @else {
+        <app-empty-products-search (clearfilters)="clearAllFilters()"></app-empty-products-search>
+      }
+    </div>
+  </div>
+</section>
+<app-features-section></app-features-section>

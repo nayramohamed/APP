@@ -1,0 +1,347 @@
+<section class="p-8">
+  <div class="container mx-auto">
+    <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div class="bg-white border-b border-gray-200 flex items-center">
+        <button
+          (click)="activeTab.set(0)"
+          [class]="
+            activeTab() === 0
+              ? 'text-primary-600 bg-primary-50/50 border-b-3 border-primary-600'
+              : 'text-gray-600'
+          "
+          class="flex items-center gap-2 px-6 py-4 font-medium whitespace-nowrap transition-all duration-200 text-gray-600 hover:text-primary-600 hover:bg-gray-50 cursor-pointer"
+        >
+          <i class="fas fa-box text-sm"></i>
+          <span>{{ 'productDetails.tabs.productDetails' | translate }}</span>
+        </button>
+        <button
+          (click)="activeTab.set(1)"
+          [class]="
+            activeTab() === 1
+              ? 'text-primary-600 bg-primary-50/50 border-b-3 border-primary-600'
+              : 'text-gray-600'
+          "
+          class="flex items-center gap-2 px-6 py-4 font-medium whitespace-nowrap transition-all duration-200 text-gray-600 hover:text-primary-600 hover:bg-gray-50 cursor-pointer"
+        >
+          <i class="fas fa-star text-sm"></i>
+          <span>{{ 'productDetails.tabs.reviews' | translate }} ({{ reviewsCount() }})</span>
+        </button>
+        <button
+          (click)="activeTab.set(2)"
+          [class]="
+            activeTab() === 2
+              ? 'text-primary-600 bg-primary-50/50 border-b-3 border-primary-600'
+              : 'text-gray-600'
+          "
+          class="flex items-center gap-2 px-6 py-4 font-medium whitespace-nowrap transition-all duration-200 text-gray-600 hover:text-primary-600 hover:bg-gray-50 cursor-pointer"
+        >
+          <i class="fas fa-truck text-sm"></i>
+          <span>{{ 'productDetails.tabs.shippingReturns' | translate }}</span>
+        </button>
+      </div>
+
+      @if (activeTab() === 0) {
+        <div class="p-6">
+          <div class="mb-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-3">
+              {{ 'productDetails.about.title' | translate }}
+            </h3>
+            <p class="text-gray-600 leading-relaxed">
+              {{ product()?.description }}
+            </p>
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="p-4 bg-gray-50 rounded-lg">
+              <h4 class="mb-3 font-medium text-gray-900">
+                {{ 'productDetails.about.productInformation' | translate }}
+              </h4>
+              <ul class="space-y-2">
+                <li class="flex justify-between text-sm">
+                  <span class="text-gray-500">{{
+                    'productDetails.about.category' | translate
+                  }}</span>
+                  <span class="text-gray-900 font-medium">{{ product()?.title }}</span>
+                </li>
+                <li class="flex justify-between text-sm">
+                  <span class="text-gray-500">{{
+                    'productDetails.about.subcategory' | translate
+                  }}</span>
+                  <span class="text-gray-900 font-medium">{{
+                    product()?.subcategory?.[0]?.name
+                  }}</span>
+                </li>
+                <li class="flex justify-between text-sm">
+                  <span class="text-gray-500">{{ 'productDetails.about.brand' | translate }}</span>
+                  <span class="text-gray-900 font-medium">{{ product()?.brand?.name }}</span>
+                </li>
+                <li class="flex justify-between text-sm">
+                  <span class="text-gray-500">{{
+                    'productDetails.about.itemsSold' | translate
+                  }}</span>
+                  <span class="text-gray-900 font-medium"
+                    >{{ product()?.sold }}+ {{ 'productDetails.about.sold' | translate }}</span
+                  >
+                </li>
+              </ul>
+            </div>
+            <div class="p-4 bg-gray-50 rounded-lg">
+              <h4 class="mb-3 font-medium text-gray-900">
+                {{ 'productDetails.about.keyFeatures' | translate }}
+              </h4>
+              <ul class="space-y-2">
+                <li class="flex items-center gap-2 text-sm">
+                  <i class="fas fa-check text-primary-600"></i>
+                  <span class="text-gray-500 font-medium">{{
+                    'productDetails.about.premiumQuality' | translate
+                  }}</span>
+                </li>
+                <li class="flex items-center gap-2 text-sm">
+                  <i class="fas fa-check text-primary-600"></i>
+                  <span class="text-gray-500 font-medium">{{
+                    'productDetails.about.authenticGuarantee' | translate
+                  }}</span>
+                </li>
+                <li class="flex items-center gap-2 text-sm">
+                  <i class="fas fa-check text-primary-600"></i>
+                  <span class="text-gray-500 font-medium">{{
+                    'productDetails.about.fastPackaging' | translate
+                  }}</span>
+                </li>
+                <li class="flex items-center gap-2 text-sm">
+                  <i class="fas fa-check text-primary-600"></i>
+                  <span class="text-gray-500 font-medium">{{
+                    'productDetails.about.qualityTested' | translate
+                  }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      } @else if (activeTab() === 1) {
+        <div class="p-6 flex items-center gap-8">
+          <div class="text-center">
+            <p class="text-5xl font-bold text-gray-900 mb-2">{{ product()?.ratingsAverage }}</p>
+            <div class="flex items-center gap-2 mb-2 justify-center">
+              @for (star of [1, 2, 3, 4, 5]; track $index) {
+                @switch (getStarType(star)) {
+                  @case ('full') {
+                    <i class="fas fa-star text-amber-400"></i>
+                  }
+                  @case ('half') {
+                    <i class="fas fa-star-half-stroke text-amber-400"></i>
+                  }
+                  @case ('empty') {
+                    <i class="far fa-star text-amber-400"></i>
+                  }
+                }
+              }
+            </div>
+            <p class="text-sm text-gray-500 mt-2">
+              {{ 'productDetails.reviews.basedOn' | translate: { count: reviewsCount() } }}
+            </p>
+          </div>
+          <div class="w-full">
+            @for (star of [5, 4, 3, 2, 1]; track $index) {
+              <div class="review flex items-center gap-3 mb-2 w-full">
+                <span class="text-sm text-gray-600 w-8">
+                  {{ star }} {{ 'productDetails.reviews.star' | translate }}
+                </span>
+
+                <div class="progress-bar flex items-center gap-3 w-full">
+                  <div class="flex-1 bg-gray-200 rounded-full h-2 w-full">
+                    <div
+                      class="bg-yellow-500 h-2 rounded-full transition-all duration-500"
+                      [style.width.%]="ratingDistribution()[star]"
+                    ></div>
+                  </div>
+
+                  <span class="text-sm text-gray-500 w-10 text-right">
+                    {{ ratingDistribution()[star] }}%
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="px-4 py-6 border-t border-gray-200">
+          @for (
+            review of reviews().slice(0, isShowedAllReviews() ? reviews().length : 3);
+            track review._id
+          ) {
+            <app-review-card
+              [review]="review"
+              (updateReview)="deleteReview($event)"
+            ></app-review-card>
+          }
+
+          @if (reviews().length > 3) {
+            <button
+              (click)="isShowedAllReviews.set(!isShowedAllReviews())"
+              class="flex items-center gap-2 text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors cursor-pointer mx-auto mt-4"
+            >
+              {{
+                isShowedAllReviews()
+                  ? ('productDetails.reviews.showLess' | translate)
+                  : ('productDetails.reviews.showAllReviews' | translate)
+              }}
+              <i
+                class="fa-solid text-xs transition-transform duration-300"
+                [class.fa-chevron-down]="!isShowedAllReviews()"
+                [class.fa-chevron-up]="isShowedAllReviews()"
+              ></i>
+            </button>
+          }
+        </div>
+
+        <div class="border-t border-gray-200 py-6">
+          <div class="py-8">
+            @if (!isLoggedIn()) {
+              <div class="bg-white rounded-xl p-8 text-center max-w-2xl mx-auto">
+                <div
+                  class="w-14 h-14 rounded-full bg-primary-50 flex items-center justify-center mx-auto mb-4"
+                >
+                  <i class="fa-solid fa-user text-primary-600 text-xl"></i>
+                </div>
+                <p class="text-base font-medium text-gray-800 mb-2">
+                  {{ 'productDetails.reviews.shareExperience' | translate }}
+                </p>
+                <p class="text-sm text-gray-400 leading-relaxed mb-6">
+                  {{ 'productDetails.reviews.shareExperienceDesc' | translate }}
+                </p>
+                <div class="flex gap-3">
+                  <a
+                    routerLink="/login"
+                    class="flex-1 py-2.5 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors cursor-pointer"
+                  >
+                    {{ 'productDetails.reviews.signIn' | translate }}
+                  </a>
+                  <a
+                    routerLink="/signup"
+                    class="flex-1 py-2.5 text-sm font-medium text-primary-600 border border-primary-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                  >
+                    {{ 'productDetails.reviews.createAccount' | translate }}
+                  </a>
+                </div>
+              </div>
+            } @else if (isPostedReviewAlready()) {
+              <div class="flex flex-col items-center justify-center gap-3">
+                <i class="fas fa-star text-4xl text-gray-300"></i>
+                <p class="text-xl">{{ 'productDetails.reviews.alreadyReviewed' | translate }}</p>
+              </div>
+            } @else if (isShowedCreateReview()) {
+              <app-create-review
+                [productId]="product()?._id!"
+                (updateReview)="addReview($event)"
+              ></app-create-review>
+            } @else {
+              <div class="flex flex-col items-center justify-center gap-3">
+                <i class="fas fa-star text-4xl text-gray-300"></i>
+                <p>{{ 'productDetails.reviews.opinionMatters' | translate }}</p>
+                <button
+                  (click)="isShowedCreateReview.set(!isShowedCreateReview())"
+                  class="text-primary-600 hover:text-primary-700 font-medium mt-2 cursor-pointer"
+                >
+                  {{ 'productDetails.reviews.writeReview' | translate }}
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      } @else if (activeTab() === 2) {
+        <div class="p-6">
+          <div class="grid md:grid-cols-2 gap-6 mb-6">
+            <div class="bg-linear-to-br from-primary-50 to-primary-100 rounded-lg p-6">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="bg-primary-600 size-12 rounded-full flex justify-center items-center">
+                  <i class="fas fa-truck text-white text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-900">
+                  {{ 'productDetails.shipping.shippingInfo' | translate }}
+                </h4>
+              </div>
+              <ul class="space-y-3">
+                <li class="flex items-center gap-2 text-sm">
+                  <i class="fas fa-check text-primary-600"></i>
+                  <span class="text-gray-700 font-medium">{{
+                    'productDetails.shipping.freeShipping' | translate
+                  }}</span>
+                </li>
+                <li class="flex items-center gap-2 text-sm">
+                  <i class="fas fa-check text-primary-600"></i>
+                  <span class="text-gray-700 font-medium">{{
+                    'productDetails.shipping.standardDelivery' | translate
+                  }}</span>
+                </li>
+                <li class="flex items-center gap-2 text-sm">
+                  <i class="fas fa-check text-primary-600"></i>
+                  <span class="text-gray-700 font-medium">{{
+                    'productDetails.shipping.expressDelivery' | translate
+                  }}</span>
+                </li>
+                <li class="flex items-center gap-2 text-sm">
+                  <i class="fas fa-check text-primary-600"></i>
+                  <span class="text-gray-700 font-medium">{{
+                    'productDetails.shipping.trackOrder' | translate
+                  }}</span>
+                </li>
+              </ul>
+            </div>
+            <div class="bg-linear-to-br from-primary-50 to-primary-100 rounded-lg p-6">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="bg-primary-600 size-12 rounded-full flex justify-center items-center">
+                  <i class="fas fa-rotate-left text-white text-xl"></i>
+                </div>
+                <h4 class="font-semibold text-gray-900">
+                  {{ 'productDetails.shipping.returnsRefunds' | translate }}
+                </h4>
+              </div>
+              <ul class="space-y-3">
+                <li class="flex items-center gap-2 text-sm">
+                  <i class="fas fa-check text-primary-600"></i>
+                  <span class="text-gray-700 font-medium">{{
+                    'productDetails.shipping.hassleReturns' | translate
+                  }}</span>
+                </li>
+                <li class="flex items-center gap-2 text-sm">
+                  <i class="fas fa-check text-primary-600"></i>
+                  <span class="text-gray-700 font-medium">{{
+                    'productDetails.shipping.fullRefund' | translate
+                  }}</span>
+                </li>
+                <li class="flex items-center gap-2 text-sm">
+                  <i class="fas fa-check text-primary-600"></i>
+                  <span class="text-gray-700 font-medium">{{
+                    'productDetails.shipping.freeReturnShipping' | translate
+                  }}</span>
+                </li>
+                <li class="flex items-center gap-2 text-sm">
+                  <i class="fas fa-check text-primary-600"></i>
+                  <span class="text-gray-700 font-medium">{{
+                    'productDetails.shipping.easyReturn' | translate
+                  }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 bg-gray-50 rounded-lg p-6">
+            <div
+              class="size-14 bg-gray-200 text-gray-600 rounded-full flex items-center justify-center"
+            >
+              <i class="fas text-xl fa-shield-halved"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900">
+                {{ 'productDetails.shipping.buyerProtection' | translate }}
+              </h4>
+              <p class="text-sm text-gray-600">
+                {{ 'productDetails.shipping.buyerProtectionDesc' | translate }}
+              </p>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

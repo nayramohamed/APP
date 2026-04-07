@@ -1,0 +1,224 @@
+<footer class="bg-gray-900 text-slate-300">
+  <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+    <div class="grid gap-8 md:grid-cols-1 lg:grid-cols-6 lg:gap-10">
+      <div class="lg:col-span-2">
+        <a
+          routerLink="/"
+          class="mb-5 inline-flex items-center rounded-md bg-white px-3 py-1.5 text-slate-900 transition hover:opacity-95"
+        >
+          <app-footer-logo></app-footer-logo>
+        </a>
+
+        <p class="max-w-md text-xs leading-6 text-slate-400 lg:text-[13px] lg:leading-6">
+          {{ 'footer.description' | translate }}
+        </p>
+
+        <ul class="mt-5 space-y-2.5">
+          <li class="flex items-center gap-2.5 text-xs lg:text-[13px]">
+            <i class="fas fa-phone text-green-400"></i>
+            <span>+1 (800) 123-4567</span>
+          </li>
+          <li class="flex items-center gap-2.5 text-xs lg:text-[13px]">
+            <i class="fas fa-envelope text-green-400"></i>
+            <span>support@freshcart.com</span>
+          </li>
+          <li class="flex items-start gap-2.5 text-xs leading-5 lg:text-[13px] lg:leading-6">
+            <i class="fas fa-location-dot pt-1 text-green-400"></i>
+            <span>123 Commerce Street, New York, NY 10001</span>
+          </li>
+        </ul>
+
+        <div class="mt-5 flex items-center gap-2.5">
+          <a
+            href="#"
+            aria-label="Facebook"
+            class="grid h-8 w-8 place-content-center rounded-full bg-slate-800 text-xs text-slate-300 hover:bg-primary-600 hover:text-white transition-colors"
+          >
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a
+            href="#"
+            aria-label="Twitter"
+            class="grid h-8 w-8 place-content-center rounded-full bg-slate-800 text-xs text-slate-300 hover:bg-primary-600 hover:text-white transition-colors"
+          >
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a
+            href="#"
+            aria-label="Instagram"
+            class="grid h-8 w-8 place-content-center rounded-full bg-slate-800 text-xs text-slate-300 hover:bg-primary-600 hover:text-white transition-colors"
+          >
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a
+            href="#"
+            aria-label="YouTube"
+            class="grid h-8 w-8 place-content-center rounded-full bg-slate-800 text-xs text-slate-300 hover:bg-primary-600 hover:text-white transition-colors"
+          >
+            <i class="fab fa-youtube"></i>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <h3 class="mb-4 text-lg font-semibold text-white lg:text-xl">
+          {{ 'footer.shop.title' | translate }}
+        </h3>
+        <ul class="space-y-2.5 text-xs text-gray-400 lg:text-[13px]">
+          <li>
+            <a routerLink="/products" class="transition hover:text-primary-400">{{
+              'footer.shop.allProducts' | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/categories" class="transition hover:text-primary-400">{{
+              'footer.shop.categories' | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/brands" class="transition hover:text-primary-400">{{
+              'footer.shop.brands' | translate
+            }}</a>
+          </li>
+          <li>
+            <a
+              [routerLink]="['/products/']"
+              [queryParams]="{ category: '6439d2d167d9aa4ca970649f' }"
+              class="transition hover:text-primary-400"
+              >{{ 'footer.shop.electronics' | translate }}</a
+            >
+          </li>
+          <li>
+            <a
+              [routerLink]="['/products/']"
+              [queryParams]="{ category: '6439d5b90049ad0b52b90048' }"
+              class="transition hover:text-primary-400"
+              >{{ 'footer.shop.mensFashion' | translate }}</a
+            >
+          </li>
+          <li>
+            <a
+              [routerLink]="['/products/']"
+              [queryParams]="{ category: '6439d58a0049ad0b52b9003f' }"
+              class="transition hover:text-primary-400"
+              >{{ 'footer.shop.womensFashion' | translate }}</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="mb-4 text-lg font-semibold text-white lg:text-xl">
+          {{ 'footer.account.title' | translate }}
+        </h3>
+        <ul class="space-y-2.5 text-xs text-gray-400 lg:text-[13px]">
+          <li>
+            <a routerLink="/profile/addresses" class="transition hover:text-primary-400">{{
+              'footer.account.myAccount' | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/orders" class="transition hover:text-primary-400">{{
+              'footer.account.orderHistory' | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/wishlist" class="transition hover:text-primary-400">{{
+              'footer.account.wishlist' | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/cart" class="transition hover:text-primary-400">{{
+              'footer.account.shoppingCart' | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/login" class="transition hover:text-primary-400">{{
+              'footer.account.signIn' | translate
+            }}</a>
+          </li>
+          <li>
+            <a routerLink="/signup" class="transition hover:text-primary-400">{{
+              'footer.account.createAccount' | translate
+            }}</a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="mb-4 text-lg font-semibold text-white lg:text-xl">
+          {{ 'footer.support.title' | translate }}
+        </h3>
+        <ul class="space-y-2.5 text-xs text-gray-400 lg:text-[13px]">
+          <li>
+            <a routerLink="/contact" class="transition hover:text-primary-400">{{
+              'footer.support.contactUs' | translate
+            }}</a>
+          </li>
+          <li>
+            <a href="#" class="transition hover:text-primary-400">{{
+              'footer.support.helpCenter' | translate
+            }}</a>
+          </li>
+          <li>
+            <a href="#" class="transition hover:text-primary-400">{{
+              'footer.support.shippingInfo' | translate
+            }}</a>
+          </li>
+          <li>
+            <a href="#" class="transition hover:text-primary-400">{{
+              'footer.support.returnsRefunds' | translate
+            }}</a>
+          </li>
+          <li>
+            <a href="#" class="transition hover:text-primary-400">{{
+              'footer.support.trackOrder' | translate
+            }}</a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="mb-4 text-lg font-semibold text-white lg:text-xl">
+          {{ 'footer.legal.title' | translate }}
+        </h3>
+        <ul class="space-y-2.5 text-xs text-gray-400 lg:text-[13px]">
+          <li>
+            <a href="#" class="transition hover:text-primary-400">{{
+              'footer.legal.privacyPolicy' | translate
+            }}</a>
+          </li>
+          <li>
+            <a href="#" class="transition hover:text-primary-400">{{
+              'footer.legal.termsOfService' | translate
+            }}</a>
+          </li>
+          <li>
+            <a href="#" class="transition hover:text-primary-400">{{
+              'footer.legal.cookiePolicy' | translate
+            }}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-slate-800/80">
+    <div
+      class="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-4 text-[11px] text-slate-500 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8"
+    >
+      <p class="text-center md:text-left">{{ 'footer.copyright' | translate }}</p>
+      <div class="flex items-center justify-center gap-5 md:justify-end">
+        <span class="inline-flex items-center gap-2">
+          <i class="far fa-credit-card"></i> Visa
+        </span>
+        <span class="inline-flex items-center gap-2">
+          <i class="far fa-credit-card"></i> Mastercard
+        </span>
+        <span class="inline-flex items-center gap-2">
+          <i class="far fa-credit-card"></i> PayPal
+        </span>
+      </div>
+    </div>
+  </div>
+</footer>

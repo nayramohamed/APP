@@ -1,0 +1,50 @@
+<div class="bg-white border border-gray-100 rounded-xl p-6">
+  <p class="text-base font-medium text-gray-800 mb-5">{{ 'reviews.writeReview' | translate }}</p>
+
+  <form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" class="space-y-4">
+    <!-- Stars -->
+    <div>
+      <label class="text-xs text-gray-400 block mb-2">{{ 'reviews.yourRating' | translate }}</label>
+      <div class="flex gap-1">
+        @for (star of stars; track star) {
+          <i
+            class="fa-star text-3xl cursor-pointer transition-colors"
+            [class.fa-solid]="star <= (hovered() || selectedRating())"
+            [class.fa-regular]="star > (hovered() || selectedRating())"
+            [class.text-amber-400]="star <= (hovered() || selectedRating())"
+            [class.text-gray-200]="star > (hovered() || selectedRating())"
+            (mouseenter)="hovered.set(star)"
+            (mouseleave)="hovered.set(0)"
+            (click)="updateRating(star)"
+          ></i>
+        }
+      </div>
+    </div>
+
+    <!-- Review -->
+    <div>
+      <label class="text-xs text-gray-400 block mb-1.5">{{
+        'reviews.yourReview' | translate
+      }}</label>
+      <textarea
+        formControlName="review"
+        rows="4"
+        [placeholder]="'reviews.reviewPlaceholder' | translate"
+        class="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg outline-none focus:border-primary-400 transition-colors resize-none leading-relaxed"
+      ></textarea>
+    </div>
+
+    <!-- Submit -->
+    <button
+      type="submit"
+      [disabled]="!reviewForm.valid || isSubmitting()"
+      class="w-full py-2.5 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 disabled:bg-gray-300 disabled:cursor-not-allowed rounded-lg transition-colors"
+    >
+      @if (isSubmitting()) {
+        {{ 'reviews.submitting' | translate }}
+      } @else {
+        {{ 'reviews.submit' | translate }}
+      }
+    </button>
+  </form>
+</div>

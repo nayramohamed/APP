@@ -1,0 +1,61 @@
+<app-breadcrumb-header
+  [title]="'products.allProducts' | translate"
+  [subtitle]="
+    activeFilters()['category']
+      ? ('products.browseCategory' | translate) + ' ' + activeFilters()['category']?.[0]?.name
+      : activeFilters()['subcategory']
+        ? ('products.browseSubcategory' | translate) +
+          ' ' +
+          activeFilters()['subcategory']?.[0]?.name +
+          ' ' +
+          ('products.browseSubcategorySuffix' | translate)
+        : ('products.exploreCollection' | translate)
+  "
+  [parentRoutes]="parentRoutes()"
+  [parentLabels]="parentLabels()"
+  [iconClass]="activeFilters()['subcategory'] ? 'fa-folder-open' : 'fa-box-open'"
+  classes="bg-linear-to-br from-primary-600 via-primary-500 to-primary-400"
+  [image]="
+    activeFilters()['category']
+      ? (activeFilters()['category']?.[0]?.image ?? '')
+      : activeFilters()['brand']
+        ? (activeFilters()['brand']?.[0]?.image ?? '')
+        : ''
+  "
+></app-breadcrumb-header>
+
+<section class="min-h-screen bg-gray-50/50">
+  <div class="container mx-auto px-4 py-8">
+    @if (isLoading()) {
+      <app-items-loader
+        class="text-primary-500"
+        loadingMessage="Loading products..."
+      ></app-items-loader>
+    } @else {
+      <div>
+        <app-active-filters
+          (clearFilters)="clearAll()"
+          [(activeFilters)]="activeFilters"
+        ></app-active-filters>
+        {{ 'products.showing' | translate: { count: productsCount() } }}
+        @if (products().length > 0) {
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+            @for (product of products(); track product._id) {
+              <app-product-card
+                [isAddedToWishlist]="InWishListSet().has(product._id)"
+                [product]="product"
+              ></app-product-card>
+            }
+          </div>
+          @if (pagesCount() > 1) {
+            <app-pagination [paginationData]="paginationData()"></app-pagination>
+          }
+        } @else {
+          <app-products-empty></app-products-empty>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<app-features-section></app-features-section>

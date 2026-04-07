@@ -1,0 +1,9 @@
+/* Hide all slides until Owl finishes initializing (adds owl-loaded class) */
+::ng-deep .owl-carousel:not(.owl-loaded) {
+  opacity: 0;
+}
+
+::ng-deep .owl-carousel.owl-loaded {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}

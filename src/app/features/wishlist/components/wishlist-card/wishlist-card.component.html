@@ -1,0 +1,115 @@
+<div
+  class="relative grid grid-cols-1 md:grid-cols-12 gap-4 p-4 md:px-6 md:py-5 items-center hover:bg-gray-50/50 transition-colors"
+>
+  @if (isLoading()) {
+    <div class="absolute inset-0 opacity-90 bg-white flex items-center justify-center">
+      <div class="text-center">
+        <i class="fas fa-spinner fa-spin text-2xl text-primary-600"></i>
+        <p>{{ 'wishlist.loading' | translate }}</p>
+      </div>
+    </div>
+  }
+
+  <div class="md:col-span-6 flex items-center gap-4">
+    <div class="flex items-center gap-3">
+      <a
+        [routerLink]="['/products/' + product()?._id]"
+        class="size-20 p-2 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden"
+      >
+        <img
+          [src]="product()?.imageCover"
+          [alt]="product()?.title"
+          class="w-full h-full object-contain p-2"
+        />
+      </a>
+
+      <div>
+        <a
+          [routerLink]="['/products/' + product()?._id]"
+          class="font-medium text-gray-900 hover:text-primary-600 transition-colors line-clamp-2"
+        >
+          {{ product()?.title }}
+        </a>
+
+        <p class="text-sm text-gray-400 mt-1">
+          {{ product()?.category?.name }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICE -->
+  <div class="md:col-span-2 flex md:justify-center items-center gap-2">
+    <span class="md:hidden text-sm text-gray-500">
+      {{ 'wishlist.price' | translate }}
+    </span>
+
+    <div class="md:text-center">
+      <p class="font-semibold text-gray-900">
+        {{ product()?.priceAfterDiscount ? product()?.priceAfterDiscount : product()?.price }} EGP
+      </p>
+
+      @if (product()?.priceAfterDiscount) {
+        <p class="text-sm text-gray-400 line-through">
+          {{ product()?.price }} EGP
+        </p>
+      }
+    </div>
+  </div>
+
+  <!-- STATUS -->
+  <div class="md:col-span-2 flex md:justify-center items-center gap-2">
+    <span class="md:hidden text-sm text-gray-500">
+      {{ 'wishlist.status' | translate }}
+    </span>
+
+    <div class="md:text-center">
+      <span
+        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700"
+      >
+        @if (isProductInCart()) {
+          <i class="fas fa-cart-shopping text-primary-700"></i>
+          {{ 'wishlist.inCart' | translate }}
+        } @else {
+          <span class="size-1.5 rounded-full bg-green-500"></span>
+          {{ 'wishlist.inStock' | translate }}
+        }
+      </span>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="md:col-span-2 flex items-center gap-2 md:justify-center">
+
+    @if (isProductInCart()) {
+      <button
+        routerLink="/cart"
+        class="flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-all"
+      >
+        <i class="fas fa-check text-xs text-green-600"></i>
+        <span class="md:hidden lg:inline">
+          {{ 'wishlist.viewCart' | translate }}
+        </span>
+      </button>
+
+    } @else {
+      <button
+        (click)="addToCart()"
+        class="flex-1 md:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-medium transition-all bg-primary-600 text-white hover:bg-primary-700 cursor-pointer"
+      >
+        <i class="fas fa-cart-shopping"></i>
+        <span class="md:hidden lg:inline">
+          {{ 'wishlist.addToCart' | translate }}
+        </span>
+      </button>
+    }
+
+    <button
+      (click)="isLoggedIn() ? showRemoveDialog() : removeFromWishlist()"
+      class="size-10 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-all disabled:opacity-50 cursor-pointer"
+      [title]="'wishlist.remove' | translate"
+    >
+      <i class="fas fa-trash text-sm"></i>
+    </button>
+  </div>
+</div>

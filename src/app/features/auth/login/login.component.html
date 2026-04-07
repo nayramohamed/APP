@@ -1,0 +1,163 @@
+<section class="min-h-screen bg-slate-100 px-4 py-10 md:py-16">
+  <div class="mx-auto grid max-w-6xl grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-10">
+    <div class="rounded-2xl bg-white p-6 text-center shadow-sm lg:p-8">
+      <div class="overflow-hidden rounded-xl bg-slate-50">
+        <img src="images/login/login-bg.svg" alt="Fresh products in cart" class="h-80 w-full object-cover" />
+      </div>
+
+      <h1 class="mt-6 text-4xl font-extrabold tracking-tight text-slate-900">
+        {{ 'login.hero.title' | translate }}
+      </h1>
+
+      <p class="mx-auto mt-4 max-w-xl text-xl leading-8 text-slate-600">
+        {{ 'login.hero.subtitle' | translate }}
+      </p>
+
+      <div class="mt-6 flex flex-wrap items-center justify-center gap-8 text-sm font-medium text-slate-500">
+        <span class="inline-flex items-center gap-2">
+          <i class="fas fa-truck text-emerald-600" aria-hidden="true"></i>
+          {{ 'login.hero.freeDelivery' | translate }}
+        </span>
+        <span class="inline-flex items-center gap-2">
+          <i class="fas fa-shield-alt text-emerald-600" aria-hidden="true"></i>
+          {{ 'login.hero.securePayment' | translate }}
+        </span>
+        <span class="inline-flex items-center gap-2">
+          <i class="fas fa-clock text-emerald-600" aria-hidden="true"></i>
+          {{ 'login.hero.support' | translate }}
+        </span>
+      </div>
+    </div>
+
+    <div class="rounded-2xl bg-white p-8 shadow-sm lg:p-10">
+      <div class="text-center">
+        <h2 class="text-3xl font-semibold text-primary-600">
+          Fresh<span class="text-slate-800">Cart</span>
+          <p class="mt-4 text-slate-800">{{ 'login.welcomeBack' | translate }}</p>
+        </h2>
+        <p class="mt-2 text-lg text-gray-600">{{ 'login.subtitle' | translate }}</p>
+      </div>
+
+      <div class="mt-8 space-y-4">
+        <button type="button" class="social-btn">
+          <i class="fab fa-google text-red-500" aria-hidden="true"></i>
+          {{ 'login.continueWithGoogle' | translate }}
+        </button>
+        <button type="button" class="social-btn">
+          <i class="fab fa-facebook text-blue-600" aria-hidden="true"></i>
+          {{ 'login.continueWithFacebook' | translate }}
+        </button>
+      </div>
+
+      <div class="my-6 flex items-center gap-3">
+        <div class="h-px flex-1 bg-slate-200"></div>
+        <span class="text-xs font-semibold uppercase tracking-[0.12em] text-slate-400">
+          {{ 'login.orContinueWithEmail' | translate }}
+        </span>
+        <div class="h-px flex-1 bg-slate-200"></div>
+      </div>
+
+      <form class="space-y-5" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div>
+          <label for="email" class="mb-2 block text-sm font-semibold text-slate-700">
+            {{ 'login.email' | translate }}
+          </label>
+          <div class="relative">
+            <i class="absolute top-1/2 -translate-y-1/2 left-4 fas fa-envelope text-slate-400" aria-hidden="true"></i>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              class="h-full w-full px-4 py-3 pl-12 bg-transparent text-base text-slate-800 outline-none placeholder:text-slate-400 rounded-xl border border-slate-300 focus-within:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all"
+              [placeholder]="'login.emailPlaceholder' | translate"
+            />
+          </div>
+          @let emailControl = loginForm.get('email');
+          @if (emailControl?.invalid && isSubmittedOnce()) {
+            <p class="mt-2 text-sm text-red-600">
+              @if (emailControl?.hasError('required')) {
+                {{ 'login.errors.emailRequired' | translate }}
+              }
+              @if (emailControl?.hasError('email')) {
+                {{ 'login.errors.emailInvalid' | translate }}
+              }
+            </p>
+          }
+        </div>
+
+        <div>
+          <div class="mb-2 flex items-center justify-between">
+            <label for="password" class="block text-sm font-semibold text-slate-700">
+              {{ 'login.password' | translate }}
+            </label>
+            <a routerLink="/forget-password" class="text-sm font-semibold text-primary-600 hover:text-primary-700">
+              {{ 'login.forgotPassword' | translate }}
+            </a>
+          </div>
+          <div class="relative">
+            <i class="absolute top-1/2 left-4 -translate-y-1/2 fas fa-lock text-slate-400" aria-hidden="true"></i>
+            <input
+              id="password"
+              [type]="isPasswordShown() ? 'text' : 'password'"
+              formControlName="password"
+              class="h-full w-full px-4 py-3 pl-12 bg-transparent text-base text-slate-800 outline-none placeholder:text-slate-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-100 transition-all rounded-xl border border-slate-300"
+              [placeholder]="'login.passwordPlaceholder' | translate"
+            />
+            <button (click)="showPassword()" type="button" class="absolute top-1/2 right-4 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer" aria-label="Toggle password visibility">
+              @if (isPasswordShown()) {
+                <app-icon name="prevent-eye" color="text-gray-400 hover:text-gray-600"></app-icon>
+              } @else {
+                <app-icon name="eye" color="text-gray-400 hover:text-gray-600"></app-icon>
+              }
+            </button>
+          </div>
+          @let passwordControl = loginForm.get('password');
+          @if (passwordControl?.invalid && isSubmittedOnce()) {
+            <p class="mt-2 text-sm text-red-600">
+              @if (passwordControl?.hasError('required')) {
+                {{ 'login.errors.passwordRequired' | translate }}
+              }
+              @if (passwordControl?.hasError('minlength')) {
+                {{ 'login.errors.passwordMinLength' | translate }}
+              }
+            </p>
+          }
+        </div>
+
+        <label class="inline-flex items-center gap-2 text-sm text-slate-600">
+          <input type="checkbox" formControlName="rememberMe" class="size-4 rounded border-slate-300 accent-primary-600" />
+          {{ 'login.keepSignedIn' | translate }}
+        </label>
+
+        <app-submit-btn
+          [textOnSubmit]="'login.signingIn' | translate"
+          [text]="'login.signIn' | translate"
+          [isSubmittingForm]="isSubmittingForm()"
+        ></app-submit-btn>
+      </form>
+
+      <div class="mt-8 border-t border-slate-200 pt-6 text-center text-base text-slate-600">
+        {{ 'login.newToFreshCart' | translate }}
+        <a routerLink="/signup" class="font-semibold text-primary-600 hover:text-primary-700">
+          {{ 'login.createAccount' | translate }}
+        </a>
+      </div>
+
+      <div class="mt-5 flex flex-wrap items-center justify-center gap-6 text-xs font-medium text-slate-400">
+        <span class="inline-flex items-center gap-2">
+          <i class="fas fa-lock" aria-hidden="true"></i>
+          {{ 'login.sslSecured' | translate }}
+        </span>
+        <span class="inline-flex items-center gap-2">
+          <i class="fas fa-users" aria-hidden="true"></i>
+          {{ 'login.users' | translate }}
+        </span>
+        <span class="inline-flex items-center gap-2">
+          <i class="fas fa-star" aria-hidden="true"></i>
+          {{ 'login.rating' | translate }}
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+<app-features-section></app-features-section>

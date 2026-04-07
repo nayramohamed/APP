@@ -1,0 +1,190 @@
+<div
+  [class]="isShowedDetails() ? 'border-primary-200  shadow-primary-100/50' : 'border-gray-100'"
+  class="order w-full bg-white rounded-2xl border overflow-hidden shadow-sm mt-4"
+>
+  <div class="flex items-start gap-4 p-6">
+    <div class="relative">
+      <div
+        class="size-24 sm:size-28 p-2.5 rounded-2xl bg-linear-to-br from-gray-50 to-white border border-gray-100 overflow-hidden flex items-center justify-center"
+      >
+        <img
+          [src]="order()?.cartItems?.at(0)?.product?.imageCover ?? ''"
+          [alt]="order()?.cartItems?.at(0)?.product?.title"
+          class="w-full h-full object-contain"
+        />
+      </div>
+      <span
+        class="absolute -top-2 -right-2 size-7 bg-gray-900 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg"
+        >+{{ order()?.cartItems?.length }}</span
+      >
+    </div>
+
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center justify-between mb-1">
+        <span
+          [class]="
+            order()?.isDelivered
+              ? 'bg-green-100 text-green-600'
+              : order()?.isPaid
+                ? 'bg-blue-100 text-blue-600'
+                : 'bg-amber-100 text-amber-600'
+          "
+          class="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-1 rounded-full"
+        >
+          <i
+            [class]="order()?.isDelivered ? 'fa-check' : order()?.isPaid ? 'fa-truck' : 'fa-clock'"
+            class="fas text-xs"
+          ></i>
+          {{ order()?.isDelivered ? 'Delivered' : order()?.isPaid ? 'On the way' : 'Processing' }}
+        </span>
+
+        <div
+          [class]="order()?.isPaid ? 'text-purple-700 bg-purple-100' : 'text-gray-600 bg-gray-100'"
+          class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors duration-150"
+        >
+          <i [class]="order()?.isPaid ? 'fa-credit-card' : 'fa-money-bill'" class="fas text-sm"></i>
+        </div>
+      </div>
+
+      <p class="text-gray-800 font-bold text-base mb-3">
+        <span class="text-gray-400 font-medium">#</span> {{ order()?.id }}
+      </p>
+
+      <div class="flex items-center gap-2 text-sm text-gray-500 mb-4 flex-wrap">
+        <span class="flex items-center gap-1">
+          <i class="fas fa-calendar-days text-gray-400 text-xs"></i>
+          {{ order()?.createdAt | date }}
+        </span>
+        <span class="text-gray-200">•</span>
+        <span class="flex items-center gap-1">
+          <i class="fas fa-box text-gray-400 text-xs"></i>
+          {{ totalItemsQuantity() }}
+          {{ totalItemsQuantity() === 1 ? 'item' : 'items' }}
+        </span>
+        @if (order()?.shippingAddress?.city) {
+          <span class="text-gray-200">•</span>
+          <span class="flex items-center gap-1 capitalize">
+            <i class="fas fa-location-dot text-gray-400 text-xs"></i>
+            {{ order()?.shippingAddress?.city }}
+          </span>
+        }
+      </div>
+
+      <div class="flex items-center justify-between">
+        <div class="flex items-baseline gap-1.5">
+          <span class="text-gray-900 font-bold text-2xl">{{
+            order()?.totalOrderPrice | number
+          }}</span>
+          <span class="text-gray-400 text-sm font-medium">EGP</span>
+        </div>
+        <button
+          (click)="isShowedDetails.set(!isShowedDetails())"
+          [class]="
+            isShowedDetails()
+              ? 'text-white bg-primary-600'
+              : 'border-gray-200  text-gray-700 bg-gray-100 hover:bg-gray-200 '
+          "
+          class="flex items-center gap-1.5 border text-sm font-semibold px-4 py-1.5 rounded-lg transition-colors duration-150 cursor-pointer"
+        >
+          @if (isShowedDetails()) {
+            Hide
+          } @else {
+            Details
+          }
+
+          <i
+            [class]="isShowedDetails() ? 'rotate-180 text-white' : 'rotate-0 text-gray-400'"
+            class="fas fa-chevron-down text-xs transition-transform"
+          ></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  @if (isShowedDetails()) {
+    <div class="orders-items border-t border-gray-100 bg-gray-50/50">
+      <div class="p-5 sm:p-6">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="size-6 rounded-lg bg-primary-100 flex items-center justify-center">
+            <i class="fas fa-receipt text-xs text-primary-600"></i>
+          </div>
+          <h4 class="font-semibold text-gray-900 text-sm flex items-center gap-2">Order Items</h4>
+        </div>
+        @for (cartItem of order()?.cartItems; track cartItem._id) {
+          <div class="rounded-xl bg-white p-4 border border-gray-200 mb-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="size-16 p-2 rounded-xl bg-gray-50">
+                  <img
+                    class="w-full h-full object-contain size-12"
+                    [src]="cartItem?.product?.imageCover"
+                    [alt]="cartItem?.product?.title"
+                  />
+                </div>
+                <div>
+                  <h5>{{ cartItem?.product?.title }}</h5>
+                  <span class="text-sm">{{ cartItem?.count }} </span>
+
+                  <span class="text-gray-500 text-sm">x {{ cartItem?.price }} EGP</span>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="text-lg font-bold text-gray-900">
+                  {{ getItemCountPrice(cartItem.price, cartItem.count) | number }}
+                </p>
+                <span class="text-xs text-gray-400">EGP</span>
+              </div>
+            </div>
+          </div>
+        }
+        <div class="grid sm:grid-cols-2 gap-4 w-full">
+          <!-- Delivery Address Card -->
+          <div class="bg-white rounded-2xl p-6 border border-gray-100">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="w-6 h-6 rounded-lg bg-blue-100 flex items-center justify-center">
+                <i class="fas fa-location-dot text-blue-600 text-xs"></i>
+              </div>
+              <span class="text-sm text-gray-900 font-semibold">Delivery Address</span>
+            </div>
+
+            <p class="text-gray-900 font-semibold text-base mb-0.5">
+              {{ order()?.shippingAddress?.city }}
+            </p>
+            <p class="text-gray-500 text-sm mb-4">{{ order()?.shippingAddress?.details }}</p>
+
+            <div class="flex items-center gap-2 text-gray-500 text-sm">
+              <i class="fas fa-phone text-gray-400 text-xs"></i>
+              <span>{{ order()?.user?.phone }}</span>
+            </div>
+          </div>
+
+          <!-- Order Summary Card -->
+          <div class="flex-1 bg-amber-100 rounded-2xl p-6 border border-amber-200">
+            <div class="flex items-center gap-2 mb-3">
+              <div class="w-6 h-6 rounded-lg bg-amber-500 flex items-center justify-center">
+                <i class="fas fa-clock text-white text-xs"></i>
+              </div>
+              <span class="text-sm font-semibold text-gray-900">Order Summary</span>
+            </div>
+
+            <div class="space-y-3">
+              <div class="flex justify-between items-center text-gray-600 mb-2">
+                <span class="text-sm">Subtotal</span>
+                <span class="text-sm">{{ order()?.totalOrderPrice | number }} EGP</span>
+              </div>
+              <div class="flex justify-between items-center font-medium text-gray-600 mb-2">
+                <span class="text-sm">Shipping</span>
+                <span class="text-sm">{{ shippingPrice() }}</span>
+              </div>
+              <div class="border-t border-gray-200/50 pt-1 flex justify-between items-center">
+                <span class="font-semibold text-gray-900 text-sm">Total</span>
+                <span class="font-bold text-gray-900 text-lg"
+                  >{{ order()?.totalOrderPrice | number }} EGP</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

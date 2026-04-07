@@ -1,0 +1,64 @@
+<form class="mt-10 space-y-7" [formGroup]="sendCodeForm" (ngSubmit)="sendCode()">
+  <div>
+    <label for="email" class="mb-2 block text-sm font-semibold">
+      {{ 'resetPassword.sendCode.label' | translate }}
+    </label>
+
+    <div class="relative">
+      <i
+        class="fas fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+        aria-hidden="true"
+      ></i>
+
+      <input
+        id="email"
+        type="email"
+        formControlName="email"
+        class="h-14 w-full rounded-xl border-2 border-gray-200 bg-white px-4 py-3 pl-12 text-lg text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+        placeholder="{{ 'resetPassword.sendCode.placeholder' | translate }}"
+      />
+    </div>
+
+    @let emailControl = sendCodeForm.get('email');
+
+    @if (emailControl?.invalid && submittedOnce()) {
+      <p class="mt-2 text-sm text-red-600">
+        @if (emailControl?.hasError('required')) {
+          {{ 'resetPassword.sendCode.errors.required' | translate }}
+        }
+
+        @if (emailControl?.hasError('email')) {
+          {{ 'resetPassword.sendCode.errors.invalid' | translate }}
+        }
+      </p>
+    }
+  </div>
+
+  <button
+    [disabled]="isSubmiting()"
+    type="submit"
+    class="inline-flex gap-2 h-14 w-full items-center justify-center rounded-xl bg-primary-600 px-4 text-lg font-semibold text-white transition hover:bg-primary-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary-100 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60"
+  >
+    @if (isSubmiting()) {
+      <i class="fas fa-spinner fa-spin"></i>
+      {{ 'resetPassword.sendCode.sending' | translate }}
+    } @else {
+      {{ 'resetPassword.sendCode.submit' | translate }}
+    }
+  </button>
+</form>
+
+<a
+  routerLink="/login"
+  class="mt-8 inline-flex w-full items-center justify-center gap-2 text-sm font-medium text-primary-600 hover:text-primary-700"
+>
+  <i class="fas fa-arrow-left" aria-hidden="true"></i>
+  {{ 'resetPassword.sendCode.backToLogin' | translate }}
+</a>
+
+<div class="mt-8 border-t border-gray-100 pt-6 text-center text-gray-600">
+  {{ 'resetPassword.sendCode.remember' | translate }}
+  <a routerLink="/login" class="font-semibold text-primary-600 hover:text-primary-700">
+    {{ 'resetPassword.sendCode.signIn' | translate }}
+  </a>
+</div>

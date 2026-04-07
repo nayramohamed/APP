@@ -1,0 +1,276 @@
+<section [class]="numOfCartItems() > 0 ? ' bg-gray-50' : ''" class="min-h-screen py-8">
+  @if (isCartLoading()) {
+    <app-items-loader
+      class="text-primary-500"
+      [loadingMessage]="'cart.loading' | translate"
+    ></app-items-loader>
+  } @else if (numOfCartItems() > 0) {
+    <div class="container mx-auto px-4">
+      <div class="mb-8">
+        <div class="text-sm text-gray-500 mb-4">
+          <a
+            routerLink="/home"
+            class="font-medium text-slate-600 hover:text-primary-600 transition-colors"
+            >{{ 'breadcrumb.home' | translate }}</a
+          >
+          <span class="mx-2">/</span>
+          <span class="font-medium text-slate-900">{{ 'breadcrumb.cart' | translate }}</span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <div
+            class="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-600 text-white shadow-sm"
+          >
+            <app-icon name="cart" width="34" height="30" color="text-white"></app-icon>
+          </div>
+
+          <div>
+            <h1 class="text-3xl font-bold text-gray-900">{{ 'cart.title' | translate }}</h1>
+          </div>
+        </div>
+        <p class="text-gray-500 mt-2">
+          <span class="font-semibold text-primary-600">
+            {{
+              numOfCartItems() > 1
+                ? ('cart.items_count_other' | translate: { count: numOfCartItems() })
+                : ('cart.items_count_one' | translate)
+            }}
+          </span>
+        </p>
+      </div>
+
+      <div class="grid gap-8 lg:grid-cols-12">
+        <div class="space-y-6 rounded-2xl lg:col-span-8">
+          @for (product of products(); track $index) {
+            <app-cart-product-card
+              (removeProduct)="onRemoveProduct($event)"
+              (productChange)="updateProduct($event)"
+              [product]="product"
+            ></app-cart-product-card>
+          }
+
+          <div
+            class="flex flex-col gap-4 border-t border-slate-200 pt-4 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <a
+              routerLink="/products"
+              class="inline-flex items-center gap-2 font-medium text-primary-600 hover:text-primary-700"
+            >
+              <span>←</span>
+              {{ 'cart.continue_shopping' | translate }}
+            </a>
+
+            <button
+              (click)="clearCartDialog()"
+              type="button"
+              class="inline-flex items-center gap-2 font-semibold text-gray-400 transition hover:text-red-500 cursor-pointer"
+            >
+              <i class="fas fa-trash-alt"></i>
+              {{ 'cart.clear_all' | translate }}
+            </button>
+          </div>
+        </div>
+
+        @if (isLoggedIn()) {
+          <aside
+            class="rounded-2xl border border-slate-200 bg-white shadow-sm sticky top-24 max-h-fit lg:col-span-4"
+          >
+            <div class="w-full bg-white rounded-2xl shadow-xl overflow-hidden">
+              <div class="bg-linear-to-r from-primary-600 to-primary-700 px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <i class="fas fa-lock text-white text-sm"></i>
+                  <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    {{ 'cart.order_summary.title' | translate }}
+                  </h3>
+                </div>
+                <p class="text-white text-xs opacity-75">
+                  {{ 'cart.order_summary.items_in_cart' | translate: { count: numOfCartItems() } }}
+                </p>
+              </div>
+
+              <div class="p-6 space-y-4">
+                @if (subtotalPrice() < 500) {
+                  <div class="bg-linear-to-r from-orange-50 to-amber-50 rounded-xl p-4">
+                    <div class="flex items-center gap-2 mb-2">
+                      <i class="fas fa-truck text-orange-500"></i>
+                      <span class="text-sm font-medium text-gray-700">
+                        {{
+                          'cart.order_summary.free_shipping_progress'
+                            | translate: { amount: 500 - subtotalPrice() }
+                        }}
+                      </span>
+                    </div>
+                    <div class="h-2 bg-orange-100 rounded-full overflow-hidden">
+                      <div
+                        class="h-full bg-linear-to-r from-orange-400 to-amber-400 rounded-full transition-all duration-500"
+                        [style]="'width: ' + freeShippingProgress() + '%'"
+                      ></div>
+                    </div>
+                  </div>
+                } @else {
+                  <div
+                    class="bg-linear-to-r from-green-50 to-emerald-50 rounded-xl p-4 flex items-center gap-3"
+                  >
+                    <div class="size-10 rounded-full bg-green-100 flex items-center justify-center">
+                      <i class="fas fa-truck text-green-600"></i>
+                    </div>
+                    <div>
+                      <p class="text-green-700 font-semibold leading-tight">
+                        {{ 'cart.order_summary.free_shipping_unlocked' | translate }}
+                      </p>
+                      <p class="text-green-600 text-sm mt-0.5 opacity-75">
+                        {{ 'cart.order_summary.free_shipping_subtitle' | translate }}
+                      </p>
+                    </div>
+                  </div>
+                }
+
+                <div class="space-y-2.5">
+                  <div class="flex justify-between items-center">
+                    <span>{{ 'cart.order_summary.subtotal' | translate }}</span>
+                    <span class="text-gray-900 font-medium"> {{ subtotalPrice() }} EGP</span>
+                  </div>
+                  <div class="flex justify-between items-center">
+                    <span>{{ 'cart.order_summary.shipping' | translate }}</span>
+                    <span
+                      [class]="subtotalPrice() < 500 ? 'text-gray-900' : 'text-green-600'"
+                      class="font-medium"
+                      >{{
+                        subtotalPrice() < 500
+                          ? ('cart.order_summary.shipping_cost' | translate)
+                          : ('cart.order_summary.shipping_free' | translate)
+                      }}</span
+                    >
+                  </div>
+                  <div
+                    class="border-t border-dashed border-gray-200 pt-3 flex justify-between items-center"
+                  >
+                    <span class="text-gray-900 font-semibold text-base">{{
+                      'cart.order_summary.total' | translate
+                    }}</span>
+                    <div class="flex items-baseline gap-1">
+                      <span class="text-gray-900 font-bold text-2xl">{{ estimatedTotal() }}</span>
+                      <span class="text-gray-500 text-sm font-medium">EGP</span>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  class="w-full flex items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-xl py-3 text-gray-500 text-sm font-medium hover:border-primary-400 hover:text-primary-600 hover:bg-primary-50/50 transition-colors cursor-pointer group"
+                >
+                  <i
+                    class="fas fa-tag text-gray-400 group-hover:text-primary-600 transition-colors"
+                  ></i>
+                  {{ 'cart.order_summary.apply_promo' | translate }}
+                </button>
+
+                <button
+                  routerLink="/checkout"
+                  class="w-full bg-linear-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold text-sm py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-md transition-colors duration-200 cursor-pointer"
+                >
+                  <i class="fas fa-lock text-white"></i>
+                  {{ 'cart.order_summary.checkout' | translate }}
+                </button>
+
+                <div class="flex items-center justify-center gap-4">
+                  <div class="flex items-center gap-1.5 text-gray-400 text-xs">
+                    <i class="fas fa-shield-halved text-green-600 text-sm"></i>
+                    <span>{{ 'cart.order_summary.secure_payment' | translate }}</span>
+                  </div>
+                  <span class="text-gray-300 text-lg font-thin">|</span>
+                  <div class="flex items-center gap-1.5 text-gray-400 text-xs">
+                    <i class="fas fa-truck text-blue-500 text-sm"></i>
+                    <span>{{ 'cart.order_summary.fast_delivery' | translate }}</span>
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <a
+                    routerLink="/products"
+                    class="text-primary-600 hover:text-primary-700 text-sm font-medium transition-colors duration-200"
+                  >
+                    <i class="fas fa-arrow-left text-xs mr-1"></i
+                    >{{ 'cart.continue_shopping' | translate }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </aside>
+        } @else {
+          <aside
+            class="rounded-2xl border border-slate-200 bg-white shadow-sm sticky top-10 max-h-fit lg:col-span-4"
+          >
+            <div class="bg-slate-900 p-5 rounded-t-2xl">
+              <h2 class="text-lg font-bold text-white">
+                {{ 'cart.order_summary.title' | translate }}
+              </h2>
+            </div>
+
+            <div class="px-5">
+              <div class="mt-5 space-y-4 text-slate-600">
+                <div class="flex items-center justify-between">
+                  <span
+                    >{{ 'cart.order_summary.subtotal' | translate }} ({{ numOfCartItems() }})</span
+                  >
+                  <span class="font-semibold"> {{ subtotalPrice() }} EGP</span>
+                </div>
+
+                <div class="flex items-center justify-between">
+                  <span>{{ 'cart.order_summary.shipping' | translate }}</span>
+                  <span class="font-medium text-green-600">{{
+                    'cart.order_summary.shipping_calculated' | translate
+                  }}</span>
+                </div>
+
+                <hr class="border-slate-200" />
+
+                <div class="flex items-center justify-between text-lg font-semibold">
+                  <span>{{ 'cart.order_summary.estimated_total' | translate }}</span>
+                  <span class="text-primary-600">{{ subtotalPrice() }} EGP</span>
+                </div>
+              </div>
+
+              <button
+                routerLink="/login"
+                type="button"
+                class="mt-6 w-full rounded-xl bg-primary-600 px-4 py-3 font-semibold text-white shadow-sm transition hover:bg-primary-700 flex gap-3 items-center justify-center cursor-pointer"
+              >
+                <i class="fas fa-user"></i>
+                {{ 'cart.order_summary.login_to_checkout' | translate }}
+              </button>
+
+              <p class="mt-3 text-center text-xs text-slate-500">
+                {{ 'cart.order_summary.no_account' | translate }}
+                <button
+                  routerLink="/signup"
+                  class="font-medium text-primary-600 hover:text-primary-700"
+                >
+                  {{ 'cart.order_summary.sign_up' | translate }}
+                </button>
+              </p>
+            </div>
+
+            <ul class="mt-5 space-y-2 text-xs text-gray-500 pb-5 px-5">
+              <li class="flex items-start gap-2">
+                <span class="text-gray-500">✓</span>
+                {{ 'cart.order_summary.saved_items' | translate }}
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-gray-500">✓</span>
+                {{ 'cart.order_summary.track_orders' | translate }}
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-gray-500">✓</span>
+                {{ 'cart.order_summary.exclusive_deals' | translate }}
+              </li>
+            </ul>
+          </aside>
+        }
+      </div>
+    </div>
+  } @else {
+    <app-empty-cart></app-empty-cart>
+  }
+</section>
+
+<app-features-section></app-features-section>

@@ -1,0 +1,99 @@
+<div>
+  <div class="bg-white">
+    <div class="flex items-center justify-between mb-3">
+      <h3 class="font-bold text-gray-900">Categories</h3>
+      @if (getSelectedCount('category') > 0) {
+        <span class="text-[11px] font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full"
+          >{{ getSelectedCount('category') }} selected</span
+        >
+      }
+    </div>
+    <div class="flex flex-col gap-2 max-h-52 overflow-y-auto scrollbar-thin pr-1">
+      @for (category of categories(); track category._id) {
+        <label
+          class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors cursor-pointer"
+          ><input
+            type="checkbox"
+            [checked]="isSelected('category', category._id)"
+            (change)="toggleCheckBoxFilter('category', category, $event.target.checked)"
+            class="rounded"
+          />
+          {{ category.name }}</label
+        >
+      }
+    </div>
+  </div>
+
+  <div class="bg-white">
+    <h3 class="font-bold text-gray-900 mb-4 pt-5 border-t border-gray-100">Price Range</h3>
+    <div class="flex gap-2 mb-3">
+      <div class="flex-1">
+        <label class="text-[10px] text-gray-400 mb-1 block">Min (EGP)</label>
+        <input
+          [value]="minPrice()"
+          (input)="onPriceChange('minPrice', $event)"
+          type="number"
+          placeholder="0"
+          class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none"
+        />
+      </div>
+      <div class="flex-1">
+        <label class="text-[10px] text-gray-400 mb-1 block">Max (EGP)</label>
+        <input
+          [value]="maxPrice()"
+          (input)="onPriceChange('maxPrice', $event)"
+          type="number"
+          placeholder="No limit"
+          class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none"
+        />
+      </div>
+    </div>
+    <div class="flex flex-wrap gap-1.5">
+      @for (price of priceRange(); track $index) {
+        <button
+          (click)="onPriceRangeFilter(price)"
+          [class]="
+            maxPrice() === price && minPrice() === 0
+              ? 'bg-primary-600 text-white'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          "
+          class="px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer"
+        >
+          Under {{ price < 1000 ? price : price / 1000 + 'K' }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="bg-white py-5 border-y border-gray-100">
+    <div class="flex items-center justify-between mb-3">
+      <h3 class="font-bold text-gray-900 mb-4">Brands</h3>
+      @if (getSelectedCount('brand') > 0) {
+        <span class="text-[11px] font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full"
+          >{{ getSelectedCount('brand') }} selected</span
+        >
+      }
+    </div>
+    <div class="flex flex-col gap-2 max-h-48 overflow-y-auto scrollbar-thin pr-1">
+      @for (brand of brands(); track brand._id) {
+        <label
+          class="text-sm text-gray-600 group-hover:text-gray-900 transition-colors cursor-pointer"
+          ><input
+            type="checkbox"
+            [checked]="isSelected('brand', brand._id)"
+            (change)="toggleCheckBoxFilter('brand', brand, $event.target.checked)"
+            class="rounded"
+          />
+          {{ brand.name }}</label
+        >
+      }
+    </div>
+  </div>
+
+  <button
+    (click)="clearAllFilters()"
+    class="w-full py-2.5 rounded-lg border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 hover:border-gray-300 transition-colors cursor-pointer"
+  >
+    Clear All Filters
+  </button>
+</div>

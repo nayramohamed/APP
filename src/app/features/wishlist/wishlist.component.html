@@ -1,0 +1,62 @@
+@if (products().length > 0) {
+  <app-breadcrumb-header
+    [title]="'wishlist.title' | translate"
+    [subtitle]="'wishlist.subtitle' | translate: { count: products().length }"
+    [parentRoutes]="['Home', 'wishlist']"
+    [parentLabels]="['breadcrumb.home' | translate, 'wishlist.title' | translate]"
+    iconClass="fa-heart !text-xl !text-red-500"
+    classes="bg-white !py-8 !px-4"
+    iconBackgroundClass="!bg-red-50 !size-12 !shadow-none !rounded-lg"
+    titleClasses="text-gray-900 !text-2xl"
+    subtitleClasses="!text-gray-500 !text-sm !mt-0"
+    linkClasses="hover:!text-primary-600 text-gray-400"
+    navigationSlashesClasses="!text-gray-900 font-medium"
+    lastRouteNameClasses="!text-gray-900 font-medium"
+  ></app-breadcrumb-header>
+}
+
+<section class="bg-gray-50/50 min-h-screen">
+  <div class="container mx-auto">
+    @if (isWishlistLoading()) {
+      <app-items-loader
+        class="text-primary-500"
+        [loadingMessage]="'wishlist.loadingFull' | translate"
+      ></app-items-loader>
+    } @else if (products().length > 0) {
+      <div class="py-8 px-4">
+        <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <!-- TABLE HEADER -->
+          <div
+            class="hidden md:grid grid-cols-12 bg-gray-50 border-b px-6 py-4 border-gray-100 text-sm font-medium text-gray-500"
+          >
+            <span class="col-span-6">{{ 'wishlist.product' | translate }}</span>
+            <span class="col-span-2 text-center">{{ 'wishlist.price' | translate }}</span>
+            <span class="col-span-2 text-center">{{ 'wishlist.status' | translate }}</span>
+            <span class="col-span-2 text-center">{{ 'wishlist.action' | translate }}</span>
+          </div>
+
+          @for (product of products(); track product._id) {
+            <app-wishlist-card
+              [isProductInCart]="productsAlreadyInCartSet().has(product._id)"
+              [product]="product"
+              (updateWishlist)="updateWishlist($event)"
+            ></app-wishlist-card>
+          }
+        </div>
+
+        <div class="mt-8 flex items-center gap-2">
+          <a
+            class="text-gray-500 hover:text-primary-600 text-sm font-medium transition-colors"
+            routerLink="/products"
+          >
+            {{ 'wishlist.continueShopping' | translate }}
+          </a>
+        </div>
+      </div>
+    } @else {
+      <app-empty-wishlist></app-empty-wishlist>
+    }
+  </div>
+</section>
+
+<app-features-section></app-features-section>

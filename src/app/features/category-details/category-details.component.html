@@ -1,0 +1,46 @@
+<app-breadcrumb-header
+  [title]="category().name"
+  [subtitle]="'categoryDetails.subtitle' | translate"
+  [parentRoutes]="['home', 'categories', category()._id]"
+  [parentLabels]="[
+    'breadcrumb.home' | translate,
+    'breadcrumb.categories' | translate,
+    category().name,
+  ]"
+  iconClass="fa-layer-group"
+  classes="bg-linear-to-br from-primary-600 via-primary-500 to-primary-400"
+  [image]="category().image ?? ''"
+></app-breadcrumb-header>
+<section class="min-h-screen">
+  <div class="container mx-auto py-10 px-4">
+    <a
+      routerLink="/categories"
+      class="inline-flex items-center gap-2 text-gray-600 hover:text-primary-600 transition-colors mb-6"
+    >
+      <i class="fas fa-arrow-left"></i>
+      <span>{{ 'categoryDetails.backToCategories' | translate }}</span>
+    </a>
+    <h2 class="text-lg font-bold text-gray-900 mb-6">
+      {{
+        'categoryDetails.subcategoriesCount'
+          | translate: { count: subcategories().length, name: category().name }
+      }}
+    </h2>
+    @if (isLoading()) {
+      <app-items-loader
+        [loadingMessage]="'categoryDetails.loadingMessage' | translate"
+        class="text-primary-500"
+      ></app-items-loader>
+    } @else if (subcategories().length > 0) {
+      <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        @for (subcategory of subcategories(); track subcategory._id) {
+          <app-subcategory-card [subcategory]="subcategory"></app-subcategory-card>
+        }
+      </div>
+    } @else {
+      <app-empty-subcategories></app-empty-subcategories>
+    }
+  </div>
+</section>
+
+<app-features-section></app-features-section>

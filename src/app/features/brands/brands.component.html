@@ -1,0 +1,33 @@
+<app-breadcrumb-header
+  [title]="'brands.topBrands' | translate"
+  [subtitle]="'brands.shopFavorite' | translate"
+  [parentRoutes]="['home', 'brands']"
+  [parentLabels]="['breadcrumb.home' | translate, 'breadcrumb.brands' | translate]"
+  iconClass="fa-tags"
+  classes="bg-gradient-to-br from-violet-600 via-violet-500 to-purple-400"
+></app-breadcrumb-header>
+
+<section class="min-h-screen bg-gray-50/50">
+  <div class="container mx-auto px-4 py-10">
+    @if (isLoading()) {
+      <app-items-loader
+        class="text-violet-600"
+        loadingMessage="Loading brands..."
+      ></app-items-loader>
+    } @else {
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
+        @for (brand of brands(); track brand._id) {
+          <app-brand-card [brand]="brand"></app-brand-card>
+        }
+      </div>
+      @if (pagesCount() > 1) {
+        <app-pagination
+          activeButtonClasses="bg-violet-600  "
+          [paginationData]="paginationData()"
+        ></app-pagination>
+      }
+    }
+  </div>
+</section>
+
+<app-features-section></app-features-section>

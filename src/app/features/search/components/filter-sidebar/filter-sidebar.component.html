@@ -1,0 +1,31 @@
+@if (toggleMobileFilters()) {
+  <aside class="lg:hidden shrink-0 flex-col gap-5 fixed inset-0 bg-black/50 z-150 w-full h-full">
+    <div class="absolute right-0 top-0 bottom-0 p-6 bg-white z-100 h-full w-[320px]">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-lg font-bold">{{ 'search.filters' | translate }}</h2>
+        <button
+          (click)="toggleMobileFilters.set(false)"
+          class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center cursor-pointer"
+        >
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+      <app-main-bar
+        [(filters)]="filters"
+        [categories]="categories()"
+        [brands]="brands()"
+        (clearfilters)="clearAllFilters()"
+      ></app-main-bar>
+    </div>
+  </aside>
+}
+<aside
+  class="hidden lg:flex w-64 shrink-0 flex-col gap-5 bg-white rounded-2xl z-30 p-6 sticky top-24"
+>
+  <app-main-bar
+    [(filters)]="filters"
+    [categories]="categories()"
+    [brands]="brands()"
+    (clearfilters)="clearAllFilters()"
+  ></app-main-bar>
+</aside>

@@ -1,0 +1,162 @@
+<section class="py-16 bg-linear-to-b from-white to-gray-50" aria-labelledby="newsletter-heading">
+  <div class="container mx-auto">
+    <div
+      class="animate-fade-in-up relative mx-auto grid lg:grid-cols-5 max-w-7xl gap-8 p-8 lg:p-14 overflow-hidden rounded-3xl bg-linear-to-br from-emerald-50 via-white to-teal-50 border border-emerald-100/50 shadow-2xl shadow-emerald-500/10"
+    >
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-5 rounded-3xl border border-white/55"
+      ></div>
+
+      <div
+        class="relative z-10 flex flex-col gap-6 lg:border-r lg:border-emerald-700/14 lg:pr-9 lg:col-span-3"
+      >
+        <div class="flex items-center gap-4">
+          <span
+            class="inline-flex size-14 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 to-teal-500 text-white shadow-lg"
+            aria-hidden="true"
+          >
+            <i class="fas fa-envelope text-xl"></i>
+          </span>
+          <div>
+            <p
+              class="m-0 text-[0.82rem] font-extrabold uppercase tracking-[0.08em] text-emerald-600"
+            >
+              {{ 'home.newsletter.label' | translate }}
+            </p>
+            <p class="m-0 text-base text-slate-500">
+              {{ 'home.newsletter.subscribers' | translate }}
+            </p>
+          </div>
+        </div>
+
+        <h2
+          id="newsletter-heading"
+          class="m-0 max-w-none text-[clamp(2rem,4vw,3.45rem)] leading-[1.05] font-extrabold text-slate-900 lg:max-w-[12ch]"
+        >
+          {{ 'home.newsletter.heading' | translate }}
+          <span class="text-emerald-600">{{ 'home.newsletter.headingHighlight' | translate }}</span>
+        </h2>
+
+        <p class="m-0 max-w-xl text-[1.1rem] leading-[1.7] text-slate-500">
+          {{ 'home.newsletter.subheading' | translate }}
+        </p>
+
+        <div class="flex flex-wrap gap-3.5" aria-label="Newsletter benefits">
+          <div
+            class="inline-flex w-full items-center backdrop-blur-sm gap-2.5 rounded-full border border-emerald-100 bg-white/80 px-4 py-2.5 font-semibold text-slate-600 shadow-[0_10px_30px_rgba(148,163,184,0.12)] sm:w-auto"
+          >
+            <div class="flex items-center justify-center bg-emerald-100 rounded-full size-7">
+              <i class="fas fa-leaf text-emerald-600 text-sm"></i>
+            </div>
+            <span class="text-sm font-medium text-gray-700">{{
+              'home.newsletter.freshPicks' | translate
+            }}</span>
+          </div>
+          <div
+            class="inline-flex w-full items-center backdrop-blur-sm gap-2.5 rounded-full border border-emerald-100 bg-white/80 px-4 py-2.5 font-semibold text-slate-600 shadow-[0_10px_30px_rgba(148,163,184,0.12)] sm:w-auto"
+          >
+            <div class="flex items-center justify-center bg-emerald-100 rounded-full size-7">
+              <i class="fas fa-truck text-emerald-600 text-sm"></i>
+            </div>
+            <span class="text-sm font-medium text-gray-700">{{
+              'home.newsletter.freeDeliveryCodes' | translate
+            }}</span>
+          </div>
+          <div
+            class="inline-flex w-full items-center backdrop-blur-sm gap-2.5 rounded-full border border-emerald-100 bg-white/80 px-4 py-2.5 font-semibold text-slate-600 shadow-[0_10px_30px_rgba(148,163,184,0.12)] sm:w-auto"
+          >
+            <div class="flex items-center justify-center bg-emerald-100 rounded-full size-7">
+              <i class="fas fa-tag text-emerald-600 text-sm"></i>
+            </div>
+            <span class="text-sm font-medium text-gray-700">{{
+              'home.newsletter.membersOnlyDeals' | translate
+            }}</span>
+          </div>
+        </div>
+
+        <form
+          class="flex flex-col gap-3"
+          [formGroup]="newsletterForm"
+          (ngSubmit)="onSubmit()"
+          novalidate
+        >
+          <label class="sr-only" for="newsletter-email">{{
+            'home.newsletter.emailLabel' | translate
+          }}</label>
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-stretch">
+            <input
+              id="newsletter-email"
+              class="min-h-[3.85rem] min-w-0 flex-1 rounded-2xl border border-emerald-700/35 bg-white/92 px-5 text-slate-900 outline-none transition duration-150 placeholder:text-slate-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/18"
+              type="email"
+              formControlName="email"
+              [placeholder]="'home.newsletter.emailPlaceholder' | translate"
+              autocomplete="email"
+              aria-required="true"
+              aria-describedby="newsletter-feedback"
+            />
+            <button
+              class="min-h-[3.85rem] rounded-2xl bg-linear-to-br from-emerald-500 to-cyan-500 px-6 font-bold text-white shadow-[0_16px_32px_rgba(16,185,129,0.28)] transition duration-150 hover:-translate-y-px hover:shadow-[0_20px_38px_rgba(16,185,129,0.32)] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-slate-900/16 sm:min-w-40"
+              type="submit"
+            >
+              {{ 'home.newsletter.subscribe' | translate }}
+            </button>
+          </div>
+          <p class="text-xs text-gray-400 pl-1">{{ 'home.newsletter.unsubscribe' | translate }}</p>
+        </form>
+      </div>
+
+      <aside
+        class="relative z-10 flex flex-col justify-center gap-4 rounded-3xl bg-linear-to-br from-gray-900 to-gray-800 text-slate-200 p-8 lg:col-span-2"
+        aria-label="Mobile app promotion"
+      >
+        <span
+          class="inline-flex w-fit self-start rounded-full border border-emerald-500/30 bg-emerald-500/20 text-emerald-400 px-3 py-1.5 text-xs font-semibold"
+        >
+          {{ 'home.newsletter.mobileApp' | translate }}
+        </span>
+        <h3 class="m-0 text-2xl font-bold leading-tight text-white">
+          {{ 'home.newsletter.mobileAppTitle' | translate }}
+        </h3>
+        <p class="text-gray-400 text-sm leading-relaxed">
+          {{ 'home.newsletter.mobileAppDesc' | translate }}
+        </p>
+
+        <div class="mt-2 grid gap-3.5" aria-hidden="true">
+          <div
+            class="flex min-h-[4.4rem] items-center gap-4 rounded-2xl border border-slate-400/18 bg-white/8 px-4 py-4"
+          >
+            <app-icon name="apple"></app-icon>
+            <div>
+              <p class="text-[10px] text-gray-400 uppercase tracking-wide">
+                {{ 'home.newsletter.downloadOn' | translate }}
+              </p>
+              <p class="text-sm font-semibold -mt-0.5">
+                {{ 'home.newsletter.appStore' | translate }}
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="flex min-h-[4.4rem] items-center gap-4 rounded-2xl border border-slate-400/18 bg-white/8 px-4 py-4"
+          >
+            <app-icon name="google-play"></app-icon>
+            <div>
+              <p class="text-[10px] text-gray-400 uppercase tracking-wide">
+                {{ 'home.newsletter.getItOn' | translate }}
+              </p>
+              <p class="text-sm font-semibold -mt-0.5">
+                {{ 'home.newsletter.googlePlay' | translate }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 pt-2 text-sm">
+          <span class="text-yellow-400">★★★★★</span>
+          <span class="text-gray-400">{{ 'home.newsletter.appRating' | translate }}</span>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
