@@ -128,7 +128,12 @@
                 <div class="space-y-2.5">
                   <div class="flex justify-between items-center">
                     <span>{{ 'cart.order_summary.subtotal' | translate }}</span>
-                    <span class="text-gray-900 font-medium"> {{ subtotalPrice() }} EGP</span>
+                    <span class="text-gray-900 font-medium">
+                      @if (discountApplied()) {
+                        <span class="line-through text-gray-400 mr-2">{{ originalSubtotal() }} EGP</span>
+                      }
+                      {{ discountedSubtotal() }} EGP
+                    </span>
                   </div>
                   <div class="flex justify-between items-center">
                     <span>{{ 'cart.order_summary.shipping' | translate }}</span>
@@ -142,6 +147,14 @@
                       }}</span
                     >
                   </div>
+                  
+                  @if (discountApplied()) {
+                    <div class="flex justify-between items-center text-green-600">
+                      <span>{{ 'cart.order_summary.discount' | translate }} (15%)</span>
+                      <span class="font-medium">- {{ discountAmount() }} EGP</span>
+                    </div>
+                  }
+                  
                   <div
                     class="border-t border-dashed border-gray-200 pt-3 flex justify-between items-center"
                   >
@@ -149,20 +162,48 @@
                       'cart.order_summary.total' | translate
                     }}</span>
                     <div class="flex items-baseline gap-1">
-                      <span class="text-gray-900 font-bold text-2xl">{{ estimatedTotal() }}</span>
+                      <span class="text-gray-900 font-bold text-2xl">{{ finalTotal() }}</span>
                       <span class="text-gray-500 text-sm font-medium">EGP</span>
                     </div>
                   </div>
                 </div>
 
-                <button
-                  class="w-full flex items-center justify-center gap-2 border-2 border-dashed border-gray-300 rounded-xl py-3 text-gray-500 text-sm font-medium hover:border-primary-400 hover:text-primary-600 hover:bg-primary-50/50 transition-colors cursor-pointer group"
-                >
-                  <i
-                    class="fas fa-tag text-gray-400 group-hover:text-primary-600 transition-colors"
-                  ></i>
-                  {{ 'cart.order_summary.apply_promo' | translate }}
-                </button>
+                <!-- حتة الكوبون المتغيرة -->
+                @if (!discountApplied()) {
+                  <div class="space-y-3">
+                    <div class="flex gap-2">
+                      <input
+                        [(ngModel)]="promoCodeInput"
+                        type="text"
+                        placeholder="Enter code (e.g. SA5)"
+                        class="flex-1 px-4 py-2 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                        maxlength="3"
+                      />
+                      <button
+                        (click)="applyPromoCode()"
+                        class="px-5 py-2 bg-primary-600 text-white rounded-xl text-sm font-semibold hover:bg-primary-700 transition-colors cursor-pointer"
+                      >
+                        Apply
+                      </button>
+                    </div>
+                    @if (promoCodeError()) {
+                      <p class="text-red-500 text-xs">{{ promoCodeError() }}</p>
+                    }
+                  </div>
+                } @else {
+                  <div class="bg-green-50 rounded-xl p-3 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <i class="fas fa-check-circle text-green-600"></i>
+                      <span class="text-green-700 text-sm font-medium">Promo code applied! 15% off</span>
+                    </div>
+                    <button
+                      (click)="removePromoCode()"
+                      class="text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
+                    >
+                      <i class="fas fa-times"></i>
+                    </button>
+                  </div>
+                }
 
                 <button
                   routerLink="/checkout"

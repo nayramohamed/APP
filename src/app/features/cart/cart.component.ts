@@ -1,19 +1,20 @@
-import { AuthService } from './../../core/services/auth.service';
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { IconComponent } from '../../shared/components/icon/icon.component';
-import { CartService } from '../../core/services/cart.service';
-import { ICartResponse } from '../../core/models/cart/cart-response-model';
-import { FeaturesSectionComponent } from '../../shared/components/features-section/features-section.component';
-import { CartProductCardComponent } from './components/cart-product-card/cart-product-card.component';
-import { EmptyCartComponent } from './components/empty-cart/empty-cart.component';
+import { TranslatePipe } from '@ngx-translate/core';
+import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs';
 import Swal from 'sweetalert2';
 import { ICartProductGuest } from '../../core/models/cart/cart-product-guest.model';
-import { ToastrService } from 'ngx-toastr';
-import { ItemsLoaderComponent } from '../../shared/components/items-loader/items-loader.component';
-import { finalize } from 'rxjs';
 import { ICartProduct } from '../../core/models/cart/cart-product-model';
-import { TranslatePipe } from '@ngx-translate/core';
+import { ICartResponse } from '../../core/models/cart/cart-response-model';
+import { CartService } from '../../core/services/cart.service';
+import { FeaturesSectionComponent } from '../../shared/components/features-section/features-section.component';
+import { IconComponent } from '../../shared/components/icon/icon.component';
+import { ItemsLoaderComponent } from '../../shared/components/items-loader/items-loader.component';
+import { AuthService } from './../../core/services/auth.service';
+import { CartProductCardComponent } from './components/cart-product-card/cart-product-card.component';
+import { EmptyCartComponent } from './components/empty-cart/empty-cart.component';
 
 @Component({
   selector: 'app-cart',
@@ -24,7 +25,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     CartProductCardComponent,
     EmptyCartComponent,
     ItemsLoaderComponent,
-    TranslatePipe
+    TranslatePipe,
+    FormsModule
   ],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css',
@@ -72,6 +74,56 @@ export class CartComponent {
     }
   });
 
+  promoCodeInput: string = '';
+  discountApplied = signal<boolean>(false);
+  promoCodeError = signal<string>('');
+  originalSubtotal = signal<number>(0);
+  discountAmount = signal<number>(0);
+
+  discountedSubtotal = computed(() => {
+    if (this.discountApplied()) {
+      return this.originalSubtotal() - this.discountAmount();
+    }
+    return this.subtotalPrice();
+  });
+
+  finalTotal = computed(() => {
+    let total = this.discountedSubtotal();
+    
+    const shipping = this.cartService.getShippingPrice(this.discountedSubtotal());
+    total += shipping;
+    
+    return Math.round(total);
+  });
+
+  applyPromoCode(): void {
+    const regex = /^[A-Za-z]{2}[0-9]$/;
+    
+    if (!this.promoCodeInput || !regex.test(this.promoCodeInput)) {
+      this.promoCodeError.set('Invalid code! Use 2 letters + 1 number (e.g. SA5)');
+      return;
+    }
+    
+    const subtotal = this.subtotalPrice();
+    this.originalSubtotal.set(subtotal);
+    const discount = subtotal * 0.15;
+    this.discountAmount.set(Math.round(discount));
+    this.discountApplied.set(true);
+    this.promoCodeError.set('');
+    
+    this.toastrService.success('15% discount applied successfully!');
+  }
+
+  removePromoCode(): void {
+    this.discountApplied.set(false);
+    this.discountAmount.set(0);
+    this.originalSubtotal.set(0);
+    this.promoCodeInput = '';
+    this.promoCodeError.set('');
+    
+    this.toastrService.info('Promo code removed');
+  }
+
   ngOnInit(): void {
     if (this.isLoggedIn()) {
       this.getCart();
@@ -82,8 +134,6 @@ export class CartComponent {
       this.isCartLoading.set(false);
     }
   }
-
-
 
   getCart(): void {
     this.cartService
@@ -114,6 +164,7 @@ export class CartComponent {
         this.cart.set([]);
         this.cartService.cartCount.set(response.numOfCartItems);
         this.toastrService.info('Cart has been cleared!');
+        this.removePromoCode();
       },
       error: (error) => {
         console.error('Error clearing cart:', error);
@@ -125,10 +176,12 @@ export class CartComponent {
     this.cartService.setGuestCart([]);
     this.cart.set([]);
     this.cartService.cartCount.set(0);
+    this.removePromoCode();
   }
 
   onRemoveProduct(cart: ICartResponse | ICartProductGuest[]): void {
     this.cart.set(cart);
+    this.removePromoCode();
   }
 
   clearCartDialog() {
@@ -192,5 +245,7 @@ export class CartComponent {
 
       this.cart.set(updatedCart);
     }
+    
+    this.removePromoCode();
   }
 }
