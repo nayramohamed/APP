@@ -1,19 +1,18 @@
-import { IShippingAddress } from './../../core/models/orders/shipping-address.model';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { FeaturesSectionComponent } from '../../shared/components/features-section/features-section.component';
-import { Router, RouterLink } from '@angular/router';
-import { OrderService } from '../../core/services/order.service';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CartService } from '../../core/services/cart.service';
-import { AddressService } from '../../core/services/address.service';
-import { IAddress } from '../../core/models/addresses/address.model';
-import { finalize, forkJoin, Observable } from 'rxjs';
-import { ICartResponse } from '../../core/models/cart/cart-response-model';
 import { DecimalPipe } from '@angular/common';
-import { AuthService } from '../../core/services/auth.service';
-import { ToastrService } from 'ngx-toastr';
-import { EGYPTIAN_PHONE_PATTERN } from '../../core/сonstants/validators.constant';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ToastrService } from 'ngx-toastr';
+import { finalize, forkJoin, Observable } from 'rxjs';
+import { IAddress } from '../../core/models/addresses/address.model';
+import { ICartResponse } from '../../core/models/cart/cart-response-model';
+import { AddressService } from '../../core/services/address.service';
+import { AuthService } from '../../core/services/auth.service';
+import { CartService } from '../../core/services/cart.service';
+import { OrderService } from '../../core/services/order.service';
+import { EGYPTIAN_PHONE_PATTERN } from '../../core/сonstants/validators.constant';
+import { FeaturesSectionComponent } from '../../shared/components/features-section/features-section.component';
 
 @Component({
   selector: 'app-checkout',

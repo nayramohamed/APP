@@ -19,14 +19,15 @@ export class OrderService {
     return this.httpClient.post(`${this.baseURL}/v2/orders/${cartId}`, shippingAddress);
   }
 
-  createCheckoutSession(cartId: string, shippingAddress: any): Observable<any> {
-    const origin = window.location.origin;
+ 
+createCheckoutSession(cartId: string, shippingAddress: any): Observable<any> {
+    const href = window.location.href;
     return this.httpClient.post(
       `${this.baseURL}/v1/orders/checkout-session/${cartId}`,
       {
         shippingAddress,
       },
-      { params: { url: origin } },
+      { params: { url: href } },
     );
   }
 }
