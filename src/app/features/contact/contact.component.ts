@@ -1,6 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ToastrService } from 'ngx-toastr';
 import { BreadcrumbHeaderComponent } from '../../shared/components/breadcrumb-header/breadcrumb-header.component';
 import { FeaturesSectionComponent } from '../../shared/components/features-section/features-section.component';
 
@@ -13,6 +15,15 @@ import { FeaturesSectionComponent } from '../../shared/components/features-secti
 export class ContactComponent {
   isChatOpen = signal<boolean>(false);
   userMessage = signal<string>('');
+  isSubmitting = signal<boolean>(false);
+  
+  formData = {
+    fullName: '',
+    email: '',
+    subject: '',
+    message: ''
+  };
+  
   chatMessages = signal<Array<{text: string, isUser: boolean, time: string}>>([
     {
       text: 'Hello! 👋 How can I help you today?',
@@ -21,6 +32,11 @@ export class ContactComponent {
     }
   ]);
   isTyping = signal<boolean>(false);
+
+  constructor(
+    private toastr: ToastrService,
+    private router: Router
+  ) {}
 
   toggleChat(): void {
     this.isChatOpen.update(val => !val);
@@ -84,5 +100,52 @@ export class ContactComponent {
       supportSection.scrollIntoView({ behavior: 'smooth' });
       this.isChatOpen.set(false);
     }
+  }
+
+  goToPage(page: string): void {
+    this.router.navigate([`/${page}`]);
+    this.isChatOpen.set(false);
+  }
+
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
+
+  onSubmit(): void {
+    if (!this.formData.fullName.trim()) {
+      this.toastr.error('Please enter your full name', 'Validation Error');
+      return;
+    }
+    
+    if (!this.formData.email.trim() || !this.isValidEmail(this.formData.email)) {
+      this.toastr.error('Please enter a valid email address', 'Validation Error');
+      return;
+    }
+    
+    if (!this.formData.subject) {
+      this.toastr.error('Please select a subject', 'Validation Error');
+      return;
+    }
+    
+    if (!this.formData.message.trim()) {
+      this.toastr.error('Please enter your message', 'Validation Error');
+      return;
+    }
+
+    this.isSubmitting.set(true);
+
+    setTimeout(() => {
+      this.toastr.success('Your message has been sent successfully!', 'Success');
+      
+      this.formData = {
+        fullName: '',
+        email: '',
+        subject: '',
+        message: ''
+      };
+      
+      this.isSubmitting.set(false);
+    }, 1000);
   }
 }

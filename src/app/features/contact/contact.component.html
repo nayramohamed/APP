@@ -113,7 +113,7 @@
       </div>
 
       <div class="flex flex-col gap-4 col-span-4" id="contact-form">
-        <form class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
+        <form #contactForm="ngForm" (ngSubmit)="onSubmit()" class="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
           <div class="flex items-start gap-4 mb-7">
             <div class="size-11 rounded-xl bg-green-50 flex items-center justify-center">
               <i class="fas fa-headset text-lg text-primary-600"></i>
@@ -135,8 +135,12 @@
               }}</label>
               <input
                 type="text"
+                name="fullName"
+                [(ngModel)]="formData.fullName"
+                #fullName="ngModel"
                 placeholder="John Doe"
                 class="w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-gray-700 transition-all"
+                [class.border-red-500]="fullName.invalid && fullName.touched"
               />
             </div>
             <div>
@@ -145,8 +149,13 @@
               }}</label>
               <input
                 type="email"
+                name="email"
+                [(ngModel)]="formData.email"
+                #email="ngModel"
+                email
                 placeholder="john@example.com"
                 class="w-full border border-gray-200 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 text-gray-700 transition-all"
+                [class.border-red-500]="email.invalid && email.touched"
               />
             </div>
           </div>
@@ -156,7 +165,11 @@
               'contact.subject' | translate
             }}</label>
             <select
+              name="subject"
+              [(ngModel)]="formData.subject"
+              #subject="ngModel"
               class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-500 bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all appearance-none cursor-pointer"
+              [class.border-red-500]="subject.invalid && subject.touched"
             >
               <option value="">{{ 'contact.selectSubject' | translate }}</option>
               <option value="general">{{ 'contact.generalInquiry' | translate }}</option>
@@ -174,16 +187,26 @@
               'contact.message' | translate
             }}</label>
             <textarea
+              name="message"
               rows="5"
+              [(ngModel)]="formData.message"
+              #message="ngModel"
               [placeholder]="'contact.messagePlaceholder' | translate"
               class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 placeholder-gray-300 bg-gray-50 resize-none transition-all focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+              [class.border-red-500]="message.invalid && message.touched"
             ></textarea>
           </div>
 
           <button
-            class="send-btn inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold text-sm px-7 py-3 rounded-xl cursor-pointer transition-all"
+            type="submit"
+            [disabled]="isSubmitting()"
+            class="send-btn inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-semibold text-sm px-7 py-3 rounded-xl cursor-pointer transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <i class="fas fa-paper-plane"></i>
+            @if (isSubmitting()) {
+              <i class="fas fa-spinner fa-spin"></i>
+            } @else {
+              <i class="fas fa-paper-plane"></i>
+            }
             {{ 'contact.sendBtn' | translate }}
           </button>
         </form>
@@ -216,7 +239,6 @@
 </section>
 
 <div class="fixed bottom-6 right-6 z-50">
-  <!-- Chat Button -->
   @if (!isChatOpen()) {
     <button
       (click)="toggleChat()"
@@ -231,8 +253,7 @@
 
   @if (isChatOpen()) {
     <div class="absolute bottom-20 right-0 w-96 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden animate-in slide-in-from-bottom-5 duration-300">
-      <!-- Chat Header -->
-      <div class="bg-gradient-to-r from-primary-600 to-primary-500 px-5 py-4 flex items-center justify-between">
+      <div class="bg-linear-to-r from-primary-600 to-primary-500 px-5 py-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
             <i class="fas fa-robot text-white text-xl"></i>
@@ -242,10 +263,7 @@
             <p class="text-white/70 text-xs">Online • Usually replies in seconds</p>
           </div>
         </div>
-        <button
-          (click)="toggleChat()"
-          class="text-white/70 hover:text-white transition-colors cursor-pointer"
-        >
+        <button (click)="toggleChat()" class="text-white/70 hover:text-white transition-colors cursor-pointer">
           <i class="fas fa-times text-lg"></i>
         </button>
       </div>
@@ -302,7 +320,7 @@
           </button>
         </div>
         
-        <div class="flex gap-2 mt-3">
+        <div class="flex flex-wrap gap-2 mt-3">
           <button
             (click)="userMessage.set('Consumer protection numbers'); sendMessage()"
             class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded-full transition-colors cursor-pointer"
@@ -320,6 +338,24 @@
             class="text-xs bg-primary-50 hover:bg-primary-100 text-primary-600 px-3 py-1.5 rounded-full transition-colors cursor-pointer"
           >
             📝 Go to Support
+          </button>
+          <button
+            (click)="goToPage('home')"
+            class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded-full transition-colors cursor-pointer"
+          >
+            🏠 Home
+          </button>
+          <button
+            (click)="goToPage('products')"
+            class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded-full transition-colors cursor-pointer"
+          >
+            🛍️ Shop
+          </button>
+          <button
+            (click)="goToPage('cart')"
+            class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded-full transition-colors cursor-pointer"
+          >
+            🛒 Cart
           </button>
         </div>
       </div>
