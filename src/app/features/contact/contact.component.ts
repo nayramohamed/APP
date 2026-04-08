@@ -107,7 +107,7 @@ export class ContactComponent {
     this.isChatOpen.set(false);
   }
 
-  private isValidEmail(email: string): boolean {
+  isValidEmail(email: string): boolean {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   }
