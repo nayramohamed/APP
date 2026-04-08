@@ -1,23 +1,24 @@
-import { MytranslateService } from './../../../core/services/my-translate.service';
 import {
   Component,
   computed,
   ElementRef,
+  HostListener,
   inject,
+  OnDestroy,
+  OnInit,
   signal,
   ViewChild,
-  OnInit,
-  OnDestroy,
-  HostListener,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
+import { ToastrService } from 'ngx-toastr';
+import { Subscription } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { CartService } from '../../../core/services/cart.service';
 import { WishlistService } from '../../../core/services/wishlist.service';
 import { IconComponent } from '../icon/icon.component';
-import { Subscription } from 'rxjs';
-import { FormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { MytranslateService } from './../../../core/services/my-translate.service';
 
 @Component({
   selector: 'app-navbar',
@@ -31,6 +32,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private readonly wishlistService: WishlistService = inject(WishlistService);
   private readonly translateService: MytranslateService = inject(MytranslateService);
   private readonly router: Router = inject(Router);
+  private readonly toastr: ToastrService = inject(ToastrService);
 
   private subscriptions: Subscription = new Subscription();
 
@@ -56,6 +58,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   selectedFlag = computed(() => this.flags()[this.currentLang()]);
 
   @ViewChild('accountMenu') accountMenu!: ElementRef;
+  @ViewChild('imageUploadInput') imageUploadInput!: ElementRef<HTMLInputElement>;
+  
   constructor(private elementRef: ElementRef) {}
 
   ngOnInit(): void {
@@ -80,6 +84,41 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.router.navigate(['/search'], {
       queryParams: { q: query },
     });
+  }
+
+  triggerImageUpload(): void {
+    this.imageUploadInput.nativeElement.click();
+  }
+
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      
+      if (!file.type.startsWith('image/')) {
+        this.toastr.error('Please select an image file', 'Invalid File');
+        return;
+      }
+      
+      if (file.size > 5 * 1024 * 1024) {
+        this.toastr.error('Image size should be less than 5MB', 'File Too Large');
+        return;
+      }
+      
+      this.toastr.success('Image uploaded successfully!', 'Success');
+      
+      console.log('Image selected:', file.name, 'Size:', file.size, 'Type:', file.type);
+      
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64Image = reader.result as string;
+        console.log('Image converted to Base64 (preview only)');
+      };
+      reader.readAsDataURL(file);
+      
+      input.value = '';
+    }
   }
 
   private loadCartCount(): void {
@@ -119,6 +158,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   toggleMobileMenu(): void {
     this.isMobileMenuOpen.update((state) => !state);
   }
+  
   toggleCategoryMenu(state: boolean): void {
     this.isCategoryMenuOpen.set(state);
   }

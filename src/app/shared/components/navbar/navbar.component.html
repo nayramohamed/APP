@@ -85,15 +85,33 @@
           (input)="searchQuery.set($event.target.value)"
           type="text"
           [placeholder]="'navbar.searchPlaceholder' | translate"
-          class="w-full px-5 py-3 pr-12 rounded-full border border-gray-200 bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-sm"
+          class="w-full px-5 py-3 pr-24 rounded-full border border-gray-200 bg-gray-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all text-sm"
         />
+        
+        <button
+          type="button"
+          (click)="triggerImageUpload()"
+          class="absolute right-14 top-1.5 text-gray-400 hover:text-primary-600 transition-colors cursor-pointer size-7 rounded-full flex items-center justify-center"
+          title="Upload image to search"
+        >
+          <i class="fas fa-image text-sm"></i>
+        </button>
+        
         <button
           type="submit"
           [disabled]="!searchQuery().trim()"
-          class="absolute right-2 top-1.5 bg-[#0aad0a] text-white size-7 rounded-full flex items-center justify-center hover:bg-green-700 cursor-pointer"
+          class="absolute right-2 top-1.5 bg-[#0aad0a] text-white size-7 rounded-full flex items-center justify-center hover:bg-green-700 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <i class="fas fa-search text-xs"></i>
         </button>
+        
+        <input
+          #imageUploadInput
+          type="file"
+          accept="image/*"
+          class="hidden"
+          (change)="onImageSelected($event)"
+        />
       </div>
     </form>
 
@@ -400,12 +418,19 @@
           (input)="searchQuery.set($event.target.value)"
           type="text"
           [placeholder]="'navbar.searchPlaceholder' | translate"
-          class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm outline-none focus:ring-1 focus:ring-primary-500"
+          class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 text-sm outline-none focus:ring-1 focus:ring-primary-500 pr-20"
         />
+        <button
+          type="button"
+          (click)="triggerImageUpload()"
+          class="absolute right-12 top-2 text-gray-400 hover:text-primary-600 transition-colors cursor-pointer w-8 h-8 rounded-lg flex items-center justify-center"
+        >
+          <i class="fas fa-image text-sm"></i>
+        </button>
         <button
           type="submit"
           [disabled]="!searchQuery().trim()"
-          class="absolute right-2 top-2 bg-[#0aad0a] text-white w-8 h-8 rounded-lg flex items-center justify-center cursor-pointer"
+          class="absolute right-2 top-2 bg-[#0aad0a] text-white w-8 h-8 rounded-lg flex items-center justify-center cursor-pointer disabled:opacity-50"
         >
           <i class="fas fa-search text-xs"></i>
         </button>

@@ -1,14 +1,14 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
-import { OrderService } from '../../core/services/order.service';
-import { IOrder } from '../../core/models/orders/order.model';
-import { OrderCardComponent } from './components/order-card/order-card.component';
-import { AuthService } from '../../core/services/auth.service';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { OrdersEmptyStateComponent } from './components/orders-empty-state/orders-empty-state.component';
 import { RouterLink } from '@angular/router';
-import { FeaturesSectionComponent } from '../../shared/components/features-section/features-section.component';
-import { finalize } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
+import { finalize } from 'rxjs';
+import { IOrder } from '../../core/models/orders/order.model';
+import { AuthService } from '../../core/services/auth.service';
+import { OrderService } from '../../core/services/order.service';
+import { FeaturesSectionComponent } from '../../shared/components/features-section/features-section.component';
+import { OrderCardComponent } from './components/order-card/order-card.component';
+import { OrdersEmptyStateComponent } from './components/orders-empty-state/orders-empty-state.component';
 
 @Component({
   selector: 'app-orders',
